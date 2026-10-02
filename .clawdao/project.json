@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "description": "AI 驱动的直播间视觉素材生成器。上传参考图 + 写文案 → 按 ClawDao 品牌调性生成封面(9:16)/顶部广告条(21:9)/Banner(16:5)/福利弹窗(1:1) 同风格图。图像模型：MiniMax image-01",
+  "tags": ["image", "ai", "livestream", "design", "minimax"],
+  "version": "1.0.0",
+  "kind": "app",
+  "ports": {
+    "web": 5182,
+    "dev": 18795
+  },
+  "protocol": {
+    "lifecycle": {
+      "start": ["bun", "run", "dev"]
+    }
+  },
+  "sourceManifests": [
+    {
+      "relPath": "package.json",
+      "rawVersion": "1.0.0"
+    }
+  ],
+  "generatorVersion": "1.0.30-pi"
+}

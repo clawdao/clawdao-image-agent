@@ -1,0 +1,28 @@
+{
+  "name": "clawdao-image-factory",
+  "version": "1.0.0",
+  "description": "ClawDao 图像工厂 — AI 驱动的直播间视觉素材生成器（封面/顶部广告条/Banner/福利弹窗）",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start": "bun run scripts/start-all.ts",
+    "dev": "bun run scripts/start-all.ts",
+    "dev:backend": "bun --watch run src/index.ts --port 18795",
+    "dev:frontend": "cd web && npx vite --host --port 5182",
+    "build:web": "cd web && npm run build",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "test:vitest": "vitest run"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "^1.4.1",
+    "@types/node": "^26.4.1",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "sharp": "^0.35.5"
+  }
+}
