@@ -1,0 +1,1106 @@
+/*!
+ * poster-spec.css — 海报 HTML/CSS 视觉规范
+ * =============================================================================
+ * 定位：**几何与视觉的唯一真源**。
+ *   - SVG 管线（src/lib/poster-renderer.ts）在本规范落地后退化为「历史对照件」，
+ *     它的像素 sha256 不得再变（见 docs/v0/v0.1/01-html-poster-pipeline.md · X-T2）。
+ *   - 本文件只定义「变量 + 类」，不写死任何一张海报的内容。
+ *
+ * 三条铁律：
+ *   1. 所有尺寸都是 `--poster-w`（排版基准宽度）的比例，禁止写死 px 字面量。
+ *   2. 所有颜色都来自调色板变量（`--tone-*`），本文件不复制第二份颜色真源。
+ *   3. 纯色底（`data-bg="solid"`）严禁渐变 / 网格 / 粒子 / 光束 / 光晕 / 暗角 / 噪点。
+ *
+ * ---------------------------------------------------------------------------
+ * LLM 可编辑边界（白名单）——只允许改这三类：
+ *   [允许] ① 文案：YAML 配置里的字符串字段
+ *   [允许] ② 颜色变量：`--c-*`、`--theme-*`（**不含** `--tone-*`，那是运行时注入的）
+ *   [允许] ③ 间距变量：`--sp-*`、`--block-gap`
+ *   [禁止] DOM 层级与元素数量、`--poster-w`、`--pad-*`、`--fs-*`、`--r-*`、
+ *          `data-bg` 取值、背景纹理开关、字体族（`--font-*`）、字重档位（`--w-*`）
+ * ========================================================================== */
+
+/* =============================================================================
+ * 1. 画布作用域
+ * =============================================================================
+ * --poster-w   排版基准宽度 W（布局单位）。字号 / 间距 / 圆角全部由它派生。
+ * --canvas-w   成品画布宽（成品像素）。背景层、品牌位、角标用它。
+ * --canvas-h   成品画布高（成品像素）。
+ * --scale      内容层相对布局单位的缩放（= canvas-w / poster-w）。
+ * --layout-h   内容层在布局单位下的高度（= 成品高 / scale）。
+ * ============================================================================= */
+
+.poster {
+  /* --- 运行时注入（渲染器写 inline style，优先级最高）--- */
+  --poster-w: 1080px;
+  --canvas-w: 1080px;
+  --canvas-h: 1080px;
+  --scale: 1;
+  --layout-h: 1080px;
+
+  /* --- 几何令牌（唯一真源）--- */
+  --pad-x: calc(var(--poster-w) * 0.067);
+  --pad-top: calc(var(--poster-w) * 0.085);
+  --pad-bottom: calc(var(--poster-w) * 0.06);
+  --content-w: calc(var(--poster-w) - var(--pad-x) * 2);
+  --block-gap: calc(var(--poster-w) * 0.058);
+
+  /* --- 间距令牌（LLM 可改）--- */
+  --sp-card-gap: calc(var(--poster-w) * 0.026);
+  --sp-card-pad: calc(var(--poster-w) * 0.032);
+  --sp-panel-pad: calc(var(--poster-w) * 0.05);
+  --sp-panel-gap: calc(var(--poster-w) * 0.028);
+  --sp-grid-row-gap: calc(var(--poster-w) * 0.03);
+  --sp-feature-gap: calc(var(--poster-w) * 0.022);
+  --sp-feature-pad: calc(var(--poster-w) * 0.026);
+  --sp-note-pad: calc(var(--poster-w) * 0.026);
+  --sp-profile-pad: calc(var(--poster-w) * 0.034);
+  --sp-note-bar: calc(var(--poster-w) * 0.006);
+  --sp-chip-pad-x: calc(var(--poster-w) * 0.012);
+  --sp-chip-pad-y: calc(var(--poster-w) * 0.008);
+  --sp-hero-bar: calc(var(--poster-w) * 0.055);
+  --sp-timeline-rail: calc(var(--poster-w) * 0.016);
+  --sp-timeline-node: calc(var(--poster-w) * 0.011);
+  --sp-timeline-chip-w: calc(var(--poster-w) * 0.2);
+  --sp-qr-frame: calc(var(--content-w) * 0.68);
+  --sp-grid-line: max(24px, calc(var(--poster-w) * 0.042));
+
+  /* --- 圆角令牌（不可改）--- */
+  --r-card: calc(var(--poster-w) * 0.018);
+  --r-panel: calc(var(--poster-w) * 0.028);
+  --r-note: calc(var(--poster-w) * 0.014);
+  --r-chip: 999px;
+
+  /* --- 字号上限（不可改；自适应只能在 [min,max] 区间取值）--- */
+  --fs-hero-kicker: calc(var(--poster-w) * 0.028);
+  --fs-hero-title-max: calc(var(--poster-w) * 0.072);
+  --fs-hero-title-min: calc(var(--poster-w) * 0.04);
+  --fs-hero-subtitle: calc(var(--poster-w) * 0.031);
+  --fs-hero-badge: calc(var(--poster-w) * 0.024);
+
+  --fs-title-enlabel: calc(var(--poster-w) * 0.0185);
+  --fs-title-eyebrow: calc(var(--poster-w) * 0.028);
+  --fs-title-main-max: calc(var(--poster-w) * 0.142);
+  --fs-title-main-min: calc(var(--poster-w) * 0.06);
+  --fs-title-subtitle: calc(var(--poster-w) * 0.033);
+  --fs-stat-value: calc(var(--poster-w) * 0.058);
+  --fs-stat-label: calc(var(--poster-w) * 0.0215);
+
+  --fs-section-label: calc(var(--poster-w) * 0.024);
+  --fs-section-title: calc(var(--poster-w) * 0.046);
+  --fs-section-desc: calc(var(--poster-w) * 0.026);
+
+  --fs-card-tag: calc(var(--poster-w) * 0.0215);
+  --fs-card-title: calc(var(--poster-w) * 0.029);
+  --fs-card-body: calc(var(--poster-w) * 0.0225);
+
+  --fs-timeline-time: calc(var(--poster-w) * 0.023);
+  --fs-timeline-title: calc(var(--poster-w) * 0.03);
+  --fs-timeline-body: calc(var(--poster-w) * 0.0235);
+
+  --fs-rows-title: calc(var(--poster-w) * 0.036);
+  --fs-rows-label: calc(var(--poster-w) * 0.023);
+  --fs-rows-item-title: calc(var(--poster-w) * 0.028);
+  --fs-rows-body: calc(var(--poster-w) * 0.0235);
+
+  --fs-profile-name: calc(var(--poster-w) * 0.042);
+  --fs-profile-role: calc(var(--poster-w) * 0.024);
+  --fs-profile-bullet: calc(var(--poster-w) * 0.0235);
+  --fs-profile-avatar: calc(var(--poster-w) * 0.165);
+
+  --fs-note: calc(var(--poster-w) * 0.025);
+  --fs-footer: calc(var(--poster-w) * 0.024);
+  --fs-footer-sub: calc(var(--poster-w) * 0.019);
+
+  --fs-ct-kicker: calc(var(--poster-w) * 0.026);
+  --fs-ct-title-max: calc(var(--poster-w) * 0.085);
+  --fs-ct-title-min: calc(var(--poster-w) * 0.036);
+  --fs-ct-subtitle: calc(var(--poster-w) * 0.03);
+  --fs-ct-note: calc(var(--poster-w) * 0.021);
+
+  --fs-feature-icon: calc(var(--poster-w) * 0.07);
+  --fs-feature-title: calc(var(--poster-w) * 0.028);
+  --fs-feature-desc: calc(var(--poster-w) * 0.021);
+
+  --fs-grid-title: calc(var(--poster-w) * 0.042);
+  --fs-grid-desc: calc(var(--poster-w) * 0.025);
+
+  --fs-qr-title: calc(var(--poster-w) * 0.03);
+  --fs-qr-caption: calc(var(--poster-w) * 0.024);
+  --fs-visual-caption: calc(var(--poster-w) * 0.022);
+
+  --fs-brand: calc(var(--poster-w) * 0.028);
+  --fs-mark: calc(var(--poster-w) * 0.02);
+
+  /* --- 字体与字重（不可改；真源 = configs/poster-html/fonts.yaml）--- */
+  --font-display: 'YouSheBiaoTiHei', 'Hiragino Sans GB', 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
+  --font-sans: 'Hiragino Sans GB', 'PingFang SC', 'Heiti SC', 'Noto Sans CJK SC', 'Microsoft YaHei', Arial, sans-serif;
+  --w-body: 400;
+  --w-medium: 500;
+  --w-strong: 700;
+  --w-heavy: 800;
+  --w-art: 400;
+
+  /* --- 行高 --- */
+  --lh-tight: 1.22;
+  --lh-body: 1.5;
+  --lh-loose: 1.62;
+
+  position: relative;
+  width: var(--canvas-w);
+  height: var(--canvas-h);
+  overflow: hidden;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: var(--w-body);
+  color: var(--c-text, #f5f5f7);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* =============================================================================
+ * 2. 调色板作用域与语义色角色
+ * =============================================================================
+ * 运行时由渲染器把 PALETTES（src/lib/poster-renderer.ts）注入为 `--tone-*`。
+ * 本层只做「语义角色 → 调色板槽位」的别名，便于按角色调色而不用碰调色板。
+ * 每个调色板作用域（主调色板 / 面板反色板）都挂 `data-palette`，
+ * 作用域内重新声明别名，面板里的文字因此自动切到反色板。
+ * ============================================================================= */
+
+[data-palette] {
+  --c-text: var(--tone-text);
+  --c-text-dim: var(--tone-text-dim);
+  --c-text-faint: var(--tone-text-faint);
+  --c-accent: var(--tone-gold);
+  --c-accent-soft: var(--tone-gold-soft);
+  --c-accent-faint: var(--tone-gold-faint);
+  --c-card-fill: var(--tone-card-fill);
+  --c-card-stroke: var(--tone-card-stroke);
+  --c-chip-fill: var(--tone-chip-fill);
+  --c-chip-text: var(--tone-chip-text);
+  --c-rail: var(--tone-rail);
+  --c-divider: var(--tone-divider);
+  --c-brand-text: var(--tone-brand-text);
+  --c-title-gradient: var(--tone-title-gradient, none);
+  --c-title-stroke: var(--tone-title-stroke, transparent);
+  --c-title-stroke-w: var(--tone-title-stroke-width, 0px);
+  --c-title-shadow: var(--tone-title-shadow, none);
+  --c-card-opacity: var(--tone-card-opacity, 1);
+  --c-bg-top: var(--tone-bg-top);
+  --c-bg-mid: var(--tone-bg-mid);
+  --c-bg-bottom: var(--tone-bg-bottom);
+  --c-organic-base: var(--tone-organic-base);
+  --c-organic-base2: var(--tone-organic-base2);
+  --c-organic-a: var(--tone-organic-shape-a);
+  --c-organic-b: var(--tone-organic-shape-b);
+  --c-organic-accent: var(--tone-organic-accent);
+  --c-aurora-base: var(--tone-aurora-base);
+  --c-aurora-ground: var(--tone-aurora-ground);
+}
+
+/* =============================================================================
+ * 3. 背景层（5 种模式）
+ * =============================================================================
+ * solid   纯平涂。**只有一色**，禁止任何叠加层（纯色底铁律 / 礼物推荐位）。
+ * none    透明（外部底图垫在下面）。
+ * gradient 渐变 + 网格 + 斜向光束 + 三团光晕 + 暗角。
+ * organic 奶油底 + 边缘有机色块（浅底铁律：无网格 / 粒子 / 光束 / 暗角）。
+ * aurora  近白底 + 极光柔光 + 底部渐变地台。
+ * ============================================================================= */
+
+.poster__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.poster[data-bg='none'] .poster__bg {
+  background: transparent;
+}
+
+.poster[data-bg='solid'] .poster__bg {
+  background: var(--c-bg-top, #007aff);
+}
+
+.poster[data-bg='gradient'] .poster__bg {
+  background-color: var(--c-bg-top, #0a142e);
+  background-image:
+    /* 暗角 */
+    radial-gradient(ellipse 72% 72% at 50% 45%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.18) 70%, rgba(0, 0, 0, 0.52) 100%),
+    /* 网格（上部更亮） */
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, rgba(255, 255, 255, 0) 1px var(--sp-grid-line)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, rgba(255, 255, 255, 0) 1px var(--sp-grid-line)),
+    /* 斜向光束 */
+    linear-gradient(105deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, 0.035) 46%, rgba(255, 255, 255, 0) 54%),
+    linear-gradient(100deg, rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, 0.028) 69%, rgba(255, 255, 255, 0) 76%),
+    /* 三团光晕 */
+    radial-gradient(ellipse 90% 28% at 68% 5%, rgba(26, 79, 232, 0.34) 0%, rgba(26, 79, 232, 0) 100%),
+    radial-gradient(ellipse 75% 30% at 28% 62%, rgba(13, 167, 199, 0.2) 0%, rgba(13, 167, 199, 0) 100%),
+    radial-gradient(ellipse 70% 18% at 50% 98%, rgba(255, 107, 92, 0.13) 0%, rgba(255, 107, 92, 0) 100%),
+    /* 底色渐变 */
+    linear-gradient(163deg, var(--c-bg-top, #0a142e) 0%, var(--c-bg-mid, #060b1a) 45%, var(--c-bg-bottom, #04070f) 100%);
+}
+
+.poster[data-bg='organic'] .poster__bg {
+  background-color: var(--c-bg-top, #fdfcf0);
+  background-image:
+    radial-gradient(ellipse 62% 42% at 50% 46%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(ellipse 34% 22% at 6% 104%, var(--c-organic-a, #cde9a8) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(ellipse 44% 20% at 48% 108%, var(--c-organic-b, #e6f3cd) 0%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(ellipse 22% 18% at 102% 90%, var(--c-organic-accent, #ffc93c) 0%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(165deg, var(--c-organic-base, #fdfcf0) 0%, var(--c-organic-base2, #f6f7e6) 100%);
+}
+
+.poster[data-bg='aurora'] .poster__bg {
+  background-color: var(--c-aurora-base, #f4f7fd);
+  background-image:
+    radial-gradient(ellipse 46% 26% at 52% 82%, rgba(26, 79, 232, 0.22) 0%, rgba(26, 79, 232, 0) 100%),
+    radial-gradient(ellipse 40% 24% at 94% 72%, rgba(74, 30, 140, 0.18) 0%, rgba(74, 30, 140, 0) 100%),
+    radial-gradient(ellipse 34% 20% at 8% 62%, rgba(13, 167, 199, 0.16) 0%, rgba(13, 167, 199, 0) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 72%, var(--c-aurora-ground, #123a86) 100%);
+}
+
+/* =============================================================================
+ * 4. 内容层
+ * =============================================================================
+ * 内容层在「布局单位」里排版（W = --poster-w），再整体缩放到成品画布。
+ * 品牌位与角标不参与缩放，钉在成品像素坐标上。
+ * ============================================================================= */
+
+.poster__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: var(--poster-w);
+  height: var(--layout-h);
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  display: flex;
+  flex-direction: column;
+  transform: scale(var(--scale));
+  transform-origin: top left;
+  overflow: hidden;
+}
+
+.poster__brand,
+.poster__mark {
+  position: absolute;
+  z-index: 2;
+}
+
+/* --- 块：统一上下间距由 --gap-before 承载（渲染器按 SVG 规则算好）--- */
+.blk {
+  flex: 0 0 auto;
+  margin-top: var(--gap-before, 0);
+  min-width: 0;
+}
+
+.blk:first-child {
+  margin-top: 0;
+}
+
+.blk--spacer {
+  flex: 0 0 auto;
+  height: var(--spacer-h, 0);
+}
+
+.blk--spacer.is-fill {
+  flex: 1 1 0;
+  height: auto;
+  min-height: 0;
+}
+
+/* =============================================================================
+ * 5. 排版原子
+ * ============================================================================= */
+
+/* 标题：颜色**默认可见**，渐变只是增强层。
+   绝不能无条件 `color: transparent`——一旦调色板没给渐变，标题会整个消失。 */
+.t-title {
+  font-family: var(--font-display);
+  font-weight: var(--w-art);
+  color: var(--c-title-fill, var(--c-text));
+  -webkit-text-stroke-width: var(--c-title-stroke-w);
+  -webkit-text-stroke-color: var(--c-title-stroke);
+  paint-order: stroke fill;
+  text-shadow: var(--c-title-shadow);
+}
+
+.t-title--grad {
+  background-image: var(--c-title-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-weight: var(--w-body);
+  line-height: var(--lh-body);
+}
+
+.t-dim {
+  color: var(--c-text-dim);
+}
+
+.t-faint {
+  color: var(--c-text-faint);
+}
+
+.t-accent {
+  color: var(--c-accent);
+}
+
+.t-center {
+  text-align: center;
+}
+
+.t-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-chip-pad-y) var(--sp-chip-pad-x);
+  border-radius: var(--r-chip);
+  background: var(--c-chip-fill);
+  color: var(--c-chip-text);
+  font-size: var(--fs-hero-badge);
+  font-weight: var(--w-medium);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* =============================================================================
+ * 6. 块级样式（16 种，与 PosterBlock 一一对应）
+ * ============================================================================= */
+
+/* ---- hero ---- */
+.hero__kicker {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.014);
+  font-size: var(--fs-hero-kicker);
+  font-weight: var(--w-medium);
+  color: var(--c-accent);
+  line-height: 1.3;
+}
+
+.hero__kicker-bar {
+  display: block;
+  width: var(--sp-hero-bar);
+  height: max(2px, calc(var(--poster-w) * 0.004));
+  border-radius: 999px;
+  background: var(--c-accent);
+  flex: 0 0 auto;
+}
+
+.hero__title {
+  margin: calc(var(--poster-w) * 0.022) 0 0;
+  font-size: var(--fs-hero-title, var(--fs-hero-title-max));
+  line-height: var(--lh-tight);
+  letter-spacing: calc(var(--poster-w) * 0.001);
+}
+
+.hero__subtitle {
+  margin: calc(var(--poster-w) * 0.018) 0 0;
+  font-size: var(--fs-hero-subtitle);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+.hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--poster-w) * 0.014);
+  margin-top: calc(var(--poster-w) * 0.024);
+}
+
+/* ---- title（封面主标题）---- */
+.title__enlabel {
+  font-size: var(--fs-title-enlabel);
+  letter-spacing: calc(var(--poster-w) * 0.006);
+  color: var(--c-text-faint);
+  text-transform: uppercase;
+}
+
+.title__eyebrow {
+  margin-top: calc(var(--poster-w) * 0.014);
+  font-size: var(--fs-title-eyebrow);
+  font-weight: var(--w-medium);
+  color: var(--c-accent);
+}
+
+.title__main {
+  margin: calc(var(--poster-w) * 0.018) 0 0;
+  font-size: var(--fs-title-main, var(--fs-title-main-max));
+  line-height: 1.14;
+  word-break: keep-all;
+}
+
+.title__subtitle {
+  margin: calc(var(--poster-w) * 0.022) 0 0;
+  font-size: var(--fs-title-subtitle);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+.title__stats {
+  display: flex;
+  gap: calc(var(--poster-w) * 0.04);
+  margin-top: calc(var(--poster-w) * 0.032);
+}
+
+.title__stat {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--poster-w) * 0.006);
+}
+
+.title__stat-value {
+  font-size: var(--fs-stat-value);
+  font-weight: var(--w-heavy);
+  line-height: 1;
+  color: var(--c-accent);
+}
+
+.title__stat-label {
+  font-size: var(--fs-stat-label);
+  color: var(--c-text-faint);
+  white-space: nowrap;
+}
+
+/* ---- section ---- */
+.section__label {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.01);
+  font-size: var(--fs-section-label);
+  font-weight: var(--w-medium);
+  letter-spacing: calc(var(--poster-w) * 0.004);
+  color: var(--c-accent);
+}
+
+.section__title {
+  margin: calc(var(--poster-w) * 0.014) 0 0;
+  font-size: var(--fs-section-title);
+  font-weight: var(--w-heavy);
+  line-height: 1.25;
+}
+
+.section__desc {
+  margin: calc(var(--poster-w) * 0.014) 0 0;
+  font-size: var(--fs-section-desc);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+/* ---- cards ---- */
+.cards__list {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: var(--sp-card-gap);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--poster-w) * 0.012);
+  padding: var(--sp-card-pad);
+  border-radius: var(--r-card);
+  background: var(--c-card-fill);
+  border: 1px solid var(--c-card-stroke);
+  min-width: 0;
+}
+
+.card__tag {
+  font-size: var(--fs-card-tag);
+  font-weight: var(--w-medium);
+  color: var(--c-accent);
+  letter-spacing: calc(var(--poster-w) * 0.002);
+}
+
+.card__title {
+  font-size: var(--fs-card-title);
+  font-weight: var(--w-strong);
+  line-height: 1.32;
+}
+
+.card__body {
+  font-size: var(--fs-card-body);
+  color: var(--c-text-dim);
+  line-height: var(--lh-loose);
+}
+
+/* ---- timeline ---- */
+.timeline__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--poster-w) * 0.026);
+  padding-left: calc(var(--sp-timeline-rail) + var(--sp-timeline-chip-w) + var(--poster-w) * 0.024);
+}
+
+.timeline__rail {
+  position: absolute;
+  top: calc(var(--poster-w) * 0.012);
+  bottom: calc(var(--poster-w) * 0.012);
+  left: calc(var(--sp-timeline-rail) + var(--sp-timeline-chip-w) + var(--poster-w) * 0.012);
+  width: 2px;
+  background: var(--c-rail);
+}
+
+.tl-item {
+  position: relative;
+}
+
+.tl-item__node {
+  position: absolute;
+  top: calc(var(--poster-w) * 0.012);
+  left: calc(-1 * (var(--sp-timeline-rail) + var(--sp-timeline-chip-w) + var(--poster-w) * 0.012) - var(--sp-timeline-node) + 1px);
+  width: calc(var(--sp-timeline-node) * 2);
+  height: calc(var(--sp-timeline-node) * 2);
+  border-radius: 50%;
+  background: var(--c-accent);
+}
+
+.tl-item__time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--sp-timeline-chip-w);
+  padding: var(--sp-chip-pad-y) calc(var(--poster-w) * 0.01);
+  border-radius: var(--r-chip);
+  background: var(--c-chip-fill);
+  color: var(--c-chip-text);
+  font-size: var(--fs-timeline-time);
+  font-weight: var(--w-medium);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.tl-item__title {
+  margin-top: calc(var(--poster-w) * 0.012);
+  font-size: var(--fs-timeline-title);
+  font-weight: var(--w-strong);
+  line-height: 1.3;
+}
+
+.tl-item__body {
+  margin-top: calc(var(--poster-w) * 0.008);
+  font-size: var(--fs-timeline-body);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+/* ---- rows ---- */
+.rows__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--poster-w) * 0.02);
+  padding-bottom: calc(var(--poster-w) * 0.016);
+  border-bottom: 1px solid var(--c-divider);
+}
+
+.rows__title {
+  font-size: var(--fs-rows-title);
+  font-weight: var(--w-heavy);
+  line-height: 1.2;
+}
+
+.rows__label {
+  font-size: var(--fs-rows-label);
+  color: var(--c-text-faint);
+}
+
+.rows__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--poster-w) * 0.026);
+  padding: calc(var(--poster-w) * 0.022) 0;
+  border-bottom: 1px solid var(--c-divider);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row__index {
+  flex: 0 0 auto;
+  width: calc(var(--poster-w) * 0.05);
+  height: calc(var(--poster-w) * 0.05);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-rows-label);
+  font-weight: var(--w-medium);
+  color: var(--c-accent);
+  border: 1px solid var(--c-accent-faint);
+}
+
+.row__main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.row__title {
+  font-size: var(--fs-rows-item-title);
+  font-weight: var(--w-strong);
+  line-height: 1.35;
+}
+
+.row__body {
+  margin-top: calc(var(--poster-w) * 0.006);
+  font-size: var(--fs-rows-body);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+/* ---- profile ---- */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.032);
+  padding: var(--sp-profile-pad);
+  border-radius: var(--r-card);
+  background: var(--c-card-fill);
+  border: 1px solid var(--c-card-stroke);
+}
+
+.profile__avatar {
+  flex: 0 0 auto;
+  width: var(--fs-profile-avatar);
+  height: var(--fs-profile-avatar);
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 calc(var(--poster-w) * 0.0045) var(--c-accent);
+}
+
+.profile__main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.profile__name {
+  font-size: var(--fs-profile-name);
+  font-weight: var(--w-heavy);
+  line-height: 1.15;
+}
+
+.profile__role {
+  margin-top: calc(var(--poster-w) * 0.008);
+  font-size: var(--fs-profile-role);
+  color: var(--c-accent);
+}
+
+.profile__bullets {
+  margin: calc(var(--poster-w) * 0.014) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--poster-w) * 0.007);
+}
+
+.profile__bullet {
+  position: relative;
+  padding-left: calc(var(--poster-w) * 0.02);
+  font-size: var(--fs-profile-bullet);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+.profile__bullet::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(var(--poster-w) * 0.011);
+  width: calc(var(--poster-w) * 0.007);
+  height: calc(var(--poster-w) * 0.007);
+  border-radius: 50%;
+  background: var(--c-accent);
+}
+
+/* ---- note ---- */
+.note {
+  display: flex;
+  align-items: stretch;
+  gap: calc(var(--poster-w) * 0.02);
+  padding: var(--sp-note-pad);
+  border-radius: var(--r-note);
+  background: var(--c-card-fill);
+  border: 1px solid var(--c-card-stroke);
+}
+
+.note__bar {
+  flex: 0 0 auto;
+  width: var(--sp-note-bar);
+  border-radius: 999px;
+  background: var(--c-accent);
+}
+
+.note__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--fs-note);
+  color: var(--c-text-dim);
+  line-height: var(--lh-loose);
+}
+
+/* ---- footer ---- */
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--poster-w) * 0.008);
+  text-align: center;
+}
+
+.footer__main {
+  font-size: var(--fs-footer);
+  font-weight: var(--w-medium);
+  color: var(--c-text-dim);
+  letter-spacing: calc(var(--poster-w) * 0.002);
+}
+
+.footer__sub {
+  font-size: var(--fs-footer-sub);
+  color: var(--c-text-faint);
+}
+
+/* ---- centerTitle ---- */
+.ct__kicker {
+  font-size: var(--fs-ct-kicker);
+  font-weight: var(--w-medium);
+  color: var(--c-accent);
+  letter-spacing: calc(var(--poster-w) * 0.004);
+  line-height: 1.35;
+}
+
+.ct__title {
+  margin: calc(var(--poster-w) * 0.022) 0 0;
+  font-size: var(--fs-ct-title, var(--fs-ct-title-max));
+  line-height: 1.16;
+}
+
+.ct__subtitle {
+  margin: calc(var(--poster-w) * 0.022) 0 0;
+  font-size: var(--fs-ct-subtitle);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+.ct__note {
+  margin: calc(var(--poster-w) * 0.018) 0 0;
+  font-size: var(--fs-ct-note);
+  color: var(--c-text-faint);
+  line-height: var(--lh-body);
+}
+
+/* ---- features ---- */
+.features__list {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+  gap: var(--sp-feature-gap);
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.012);
+  padding: var(--sp-feature-pad);
+  border-radius: var(--r-card);
+  background: var(--c-card-fill);
+  border: 1px solid var(--c-card-stroke);
+  text-align: center;
+  min-width: 0;
+}
+
+.feature__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--fs-feature-icon) * 1.6);
+  height: calc(var(--fs-feature-icon) * 1.6);
+  font-size: var(--fs-feature-icon);
+  line-height: 1;
+  color: var(--c-accent);
+}
+
+.feature__title {
+  font-size: var(--fs-feature-title);
+  font-weight: var(--w-strong);
+  line-height: 1.35;
+}
+
+.feature__desc {
+  font-size: var(--fs-feature-desc);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+/* ---- grid ---- */
+.grid__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-grid-row-gap);
+}
+
+.grid-item {
+  min-width: 0;
+}
+
+.grid-item__title {
+  font-size: var(--fs-grid-title);
+  font-weight: var(--w-heavy);
+  line-height: 1.2;
+}
+
+.grid-item__desc {
+  margin-top: calc(var(--poster-w) * 0.012);
+  font-size: var(--fs-grid-desc);
+  color: var(--c-text-dim);
+  line-height: var(--lh-body);
+}
+
+/* ---- panel ---- */
+.panel {
+  width: calc(var(--width-ratio, 1) * 100%);
+  margin: 0 auto;
+  padding: var(--sp-panel-pad);
+  border-radius: var(--r-panel);
+  background: var(--c-card-fill);
+  border: 1px solid var(--c-card-stroke);
+  box-shadow: 0 calc(var(--poster-w) * 0.012) calc(var(--poster-w) * 0.022) rgba(0, 0, 0, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-panel-gap);
+  min-height: var(--min-height, 0);
+}
+
+.panel__inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ---- qr ---- */
+.qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.016);
+  text-align: center;
+}
+
+.qr__frame {
+  padding: calc(var(--poster-w) * 0.024);
+  border-radius: calc(var(--poster-w) * 0.016);
+  background: #ffffff;
+  box-shadow: 0 calc(var(--poster-w) * 0.008) calc(var(--poster-w) * 0.02) rgba(0, 0, 0, 0.14);
+}
+
+.qr__img {
+  display: block;
+  width: var(--qr-size, calc(var(--content-w) * 0.68));
+  height: var(--qr-size, calc(var(--content-w) * 0.68));
+  image-rendering: pixelated;
+}
+
+.qr__title {
+  font-size: var(--fs-qr-title);
+  font-weight: var(--w-strong);
+}
+
+.qr__caption {
+  font-size: var(--fs-qr-caption);
+  color: var(--c-text-dim);
+}
+
+/* ---- visual ---- */
+.visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.014);
+}
+
+.visual__img {
+  display: block;
+  width: var(--visual-w, 100%);
+  height: auto;
+  border-radius: calc(var(--poster-w) * 0.012);
+}
+
+.visual__caption {
+  font-size: var(--fs-visual-caption);
+  color: var(--c-text-faint);
+  text-align: center;
+}
+
+/* ---- spacer ---- */
+.blk--spacer {
+  background: none;
+}
+
+/* =============================================================================
+ * 7. 品牌位与角标（成品像素坐标，不随内容缩放）
+ * ============================================================================= */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.014);
+  font-size: var(--fs-brand);
+  font-weight: var(--w-heavy);
+  color: var(--c-brand-text, #123a2b);
+  letter-spacing: calc(var(--poster-w) * 0.0011);
+  white-space: nowrap;
+}
+
+.brand__logo {
+  display: block;
+  height: var(--brand-logo-h, calc(var(--poster-w) * 0.05));
+  width: var(--brand-logo-w, auto);
+  object-fit: contain;
+}
+
+.brand--chip {
+  padding: calc(var(--poster-w) * 0.013) calc(var(--poster-w) * 0.016);
+  border-radius: calc(var(--brand-chip-h, 0) * 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(18, 58, 43, 0.1);
+}
+
+.poster__brand[data-position='top-right'] {
+  top: calc(var(--poster-w) * 0.035);
+  right: calc(var(--poster-w) * 0.055);
+}
+
+.poster__brand[data-position='top-left'] {
+  top: calc(var(--poster-w) * 0.035);
+  left: calc(var(--poster-w) * 0.055);
+}
+
+.poster__brand[data-position='bottom-center'] {
+  bottom: calc(var(--poster-w) * 0.035);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--poster-w) * 0.008);
+  font-size: var(--fs-mark);
+  font-weight: var(--w-strong);
+  color: var(--c-brand-text, #171719);
+  white-space: nowrap;
+}
+
+.mark__logo {
+  display: block;
+  height: var(--mark-logo-h, calc(var(--poster-w) * 0.03));
+  width: var(--mark-logo-w, auto);
+  object-fit: contain;
+}
+
+.poster__mark[data-position='bottom-right'] {
+  right: calc(var(--poster-w) * 0.016);
+  bottom: calc(var(--poster-w) * 0.012);
+}
+
+.poster__mark[data-position='bottom-left'] {
+  left: calc(var(--poster-w) * 0.016);
+  bottom: calc(var(--poster-w) * 0.012);
+}
+
+/* =============================================================================
+ * 8. 三套主题
+ * =============================================================================
+ * 主题只改「风格规则」和「浅底铁律」，不改调色板——调色板真源始终是 PALETTES。
+ * 渲染器注入 data-theme 时会校验它与实际 tone 匹配（不匹配直接抛错），
+ * 因此本节不会出现第二份颜色真源。
+ *
+ *   warm  暖色琥珀 → tone warm_amber
+ *   blue  经典商务蓝 → tone classic_blue
+ *   fresh 清新绿 → tone fresh_green
+ * ============================================================================= */
+
+/* 浅底（纯白 / 纯奶油 / 纯浅绿）通用铁律：
+   1) 标题不加描边、不加发光阴影（否则出现「脏点」）
+   2) 关闭网格 / 粒子 / 光束 / 暗角
+   3) 小字标签一律压深，保证可读对比度 */
+.poster[data-bg='solid'] .t-title,
+.poster[data-bg='organic'] .t-title {
+  -webkit-text-stroke-width: 0;
+  text-shadow: none;
+}
+
+[data-theme='warm'] {
+  --theme-label: '暖色琥珀';
+}
+
+[data-theme='blue'] {
+  --theme-label: '经典商务蓝';
+}
+
+[data-theme='fresh'] {
+  --theme-label: '清新绿';
+}
+
+/* 清新绿浅底：小字标签压深（AGENTS.md 浅底配色铁律） */
+.poster[data-theme='fresh'][data-bg='solid'] .t-faint,
+.poster[data-theme='fresh'][data-bg='organic'] .t-faint {
+  color: var(--c-accent-soft, #3e8e1f);
+}
+
+.poster[data-theme='fresh'][data-bg='solid'] .chip,
+.poster[data-theme='fresh'][data-bg='organic'] .chip {
+  color: var(--c-accent-soft, #2a6e12);
+}
+
+/* =============================================================================
+ * 9. 纯色底铁律（礼物 / 推荐位）
+ * =============================================================================
+ * 平台的 AI 编辑工具会把深底海报抠成「主体 + 白底」，白字消失、字变虚影。
+ * 纯色底必须**真正不透明平涂**：一个像素只有一个颜色。
+ * ============================================================================= */
+
+.poster[data-bg='solid'] .poster__bg {
+  background-image: none;
+  background-color: var(--c-bg-top);
+  box-shadow: none;
+  filter: none;
+}
+
+.poster[data-bg='solid'] .card,
+.poster[data-bg='solid'] .panel,
+.poster[data-bg='solid'] .feature,
+.poster[data-bg='solid'] .profile,
+.poster[data-bg='solid'] .note {
+  box-shadow: none;
+}
+
+/* =============================================================================
+ * 10. LLM 可编辑白名单（声明式，供检查器与人工审阅引用）
+ * =============================================================================
+ *   允许：--c-*、--theme-*（颜色变量）
+ *   允许：--sp-*、--block-gap（间距变量）
+ *   禁止：--poster-w、--pad-*、--fs-*、--r-*、--font-*、--w-*、--lh-*、data-bg
+ * ============================================================================= */

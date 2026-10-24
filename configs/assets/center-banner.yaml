@@ -1,0 +1,47 @@
+# 居中商务 banner（黑金直播 banner 风格）
+#
+# 参考稿：.clawdao-uploads/att-*.png
+#   纯黑底 + 顶部暗金光晕 + 居中金属艺术字 + 标题下水平光带 + 副标题 + 底部三段装饰线
+#
+# 与 top-banner 的区别：
+#   - 不贴 IP 吉祥物（参考稿无角色）
+#   - 排版走 layout:center（居中商务版式），而非左文右 IP
+#
+# 文案可用命令行覆盖：--title / --subtitle / --count / --tone
+
+id: center-banner
+label: 居中商务 banner（黑金直播风格）
+pipeline: banner
+
+outputDir: ./outputs
+fileNamePrefix: center-banner
+format: jpg
+
+target:
+  width: 1920
+  height: 320
+
+tone: black_gold
+layout: center
+variantCount: 2
+aspectRatio: 21:9
+
+# 纯黑金底图提示词：底图只负责质感，光带与所有文字由本地排版层精确叠加
+prompt: |
+  【用途】黑金商务风直播顶部超宽 banner 的纯底图（成品 1920×320）
+  【画面】接近纯黑的哑光深色背景（#08080A ~ #121014），有极细微的哑光颗粒质感；画面顶部中间偏右有一处非常柔和、非常微弱的暖棕金色环境光晕，向四周迅速衰减为纯黑；其余区域保持纯净的深黑，不要任何纹理花纹
+  【构图】画面中下部（下方 2/3）必须保持完全纯净的深黑，横向 21:9 宽幅，重心偏上
+  【禁止】不要画任何角色、动物、人物、产品、物体、图标、边框、光带、射线、粒子、星点、徽标、纹样、渐变条纹；不要画文字、字母、数字、Logo、水印、签名、伪文字
+  【负面提示】角色、动物、龙虾、人物、物体、图标、光带、射线、粒子、星点、纹样、花纹、文字、字母、数字、Logo、水印、边框、亮块、彩色渐变
+
+background:
+  darken: 0.6
+  saturation: 0.88
+
+ip:
+  enabled: false
+
+overlay:
+  category: top_banner
+  title: 你出想法 我给结果
+  subtitle: 企业老板 | 实体商家 | 生产工厂 | 创业公司 | 自媒体公司 | 超级个体

@@ -15,9 +15,10 @@
  */
 
 import {existsSync} from 'node:fs';
-import {join, extname} from 'node:path';
+import {join, extname, sep} from 'node:path';
 import {resolve} from 'node:path';
 import {resolveApiKey, createTask, get, listAll, cancel, remove, defaultOutputDir, RuntimeConfig} from './app-server/task-manager';
+import {handlePosterRoutes} from './app-server/poster-api';
 
 const argPort = process.argv.indexOf('--port');
 const PORT = Number(
@@ -34,7 +35,9 @@ if (!apiKey) {
 const cfg: RuntimeConfig = {
   apiKey,
   imageBaseUrl: process.env.MINIMAX_BASE_URL ?? 'https://api.minimaxi.com',
-  llmBaseUrl: process.env.MINIMAX_LLM_BASE_URL ?? 'https://api.minimaxi.com/anthropic',
+  // Anthropic 兼容端点：完整路径是 <base>/v1/messages
+  // （只写 .../anthropic 会 404，实测已验证）
+  llmBaseUrl: process.env.MINIMAX_LLM_BASE_URL ?? 'https://api.minimaxi.com/anthropic/v1',
   outputDir: OUTPUTS,
   urlPrefix: '/outputs/',
 };
@@ -58,6 +61,16 @@ function json(data: unknown, status = 200): Response {
     status,
     headers: {'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*'},
   });
+}
+
+/**
+ * 判断 target 是否真的位于 root 目录之内。
+ * 不能用 `target.startsWith(root)`：`/outputs-evil/` 也能通过 `/outputs` 的前缀检查。
+ * 必须保证相等，或后面紧跟一个路径分隔符。
+ */
+function isInside(root: string, target: string): boolean {
+  const normalizedRoot = root.endsWith(sep) ? root : root + sep;
+  return target === root || target.startsWith(normalizedRoot);
 }
 
 async function readBody(req: Request): Promise<Record<string, unknown>> {
@@ -122,6 +135,16 @@ const server = Bun.serve({
       return json({code: 0, data: await listAll()});
     }
 
+    // ── 海报工作室（Fabric 编辑器 + 文生图/图生图 + AI 指令）──
+    const posterResponse = await handlePosterRoutes(req, url, {
+      apiKey: cfg.apiKey,
+      imageBaseUrl: cfg.imageBaseUrl,
+      llmBaseUrl: cfg.llmBaseUrl,
+      outputDir: cfg.outputDir,
+      urlPrefix: cfg.urlPrefix,
+    });
+    if (posterResponse) return posterResponse;
+
     const downloadMatch = pathname.match(/^\/api\/task\/([^/]+)\/download$/);
     if (downloadMatch && method === 'GET') {
       const task = await get(downloadMatch[1]);
@@ -153,17 +176,22 @@ const server = Bun.serve({
 
     // ── outputs 静态 ──
     if (pathname.startsWith('/outputs/')) {
-      const rel = pathname.slice('/outputs/'.length);
+      const rel = decodeURIComponent(pathname.slice('/outputs/'.length));
+      // 拒绝含 NUL 字节或明显的向上跳目录写法（decode 后才能发现 %2e%2e%2f）
+      if (rel.includes('\0') || rel.split(/[/\\]/).includes('..')) {
+        return json({code: 403, msg: 'forbidden'}, 403);
+      }
       const abs = resolve(OUTPUTS, rel);
-      if (!abs.startsWith(OUTPUTS)) return json({code: 403, msg: 'forbidden'}, 403);
+      if (!isInside(OUTPUTS, abs)) return json({code: 403, msg: 'forbidden'}, 403);
       return staticFile(abs) ?? json({code: 404, msg: 'file not found'}, 404);
     }
 
     // ── 前端静态（web/dist 构建产物，单端口部署）──
     if (existsSync(WEB_DIST)) {
-      const rel = pathname === '/' ? 'index.html' : pathname.slice(1);
+      const rel = pathname === '/' ? 'index.html' : decodeURIComponent(pathname.slice(1));
       const abs = resolve(WEB_DIST, rel);
-      if (!abs.startsWith(WEB_DIST)) return json({code: 403}, 403);
+      // SPA fallback 允许 dist 内任意文件，但绝不越过 dist 根目录
+      if (!isInside(WEB_DIST, abs)) return json({code: 403}, 403);
       const f = staticFile(abs);
       if (f) return f;
       // SPA fallback

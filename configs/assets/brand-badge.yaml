@@ -1,0 +1,22 @@
+# brand-badge.yaml —— 品牌角标（圆角方块 + 白色剪影）
+#
+# 目的：直播封面等版式需要一枚「橙色圆角方块 + 白色角色剪影」的品牌角标
+#      （对齐参考图的左上角标识）。角色本体是橙色，直接摆在橙底上会糊成一团，
+#      所以这里只取抠图的 alpha 通道，重新填成白色当剪影用。
+#
+# 用法：bun run scripts/gen-asset.ts brand-badge
+#       （输入 / 输出可用 --input / --output 覆盖）
+
+id: brand-badge
+label: 品牌角标（圆角方块 + 白色剪影）
+pipeline: badge
+
+input: public/brand/lobster-cutout.png
+output: public/brand/lobster-badge.png
+
+# 画布尺寸 / 圆角 / 底色 / 前景色 / 剪影内缩
+size: 512
+radius: 120
+bg: '#F2622E'
+fg: '#FFFFFF'
+inset: 84

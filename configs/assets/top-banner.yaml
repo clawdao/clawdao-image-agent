@@ -1,0 +1,55 @@
+# 顶部广告条（左文 + 右侧 IP 吉祥物）
+#
+# 流水线（三段式，与应用主链路同源）：
+#   smartGenerate（AI 出纯背景底图）→ composeBanner（裁切 + 贴 IP 资产）→ applyTextOverlay（艺术字叠层）
+#
+# 为什么不用 image-01 直接画 IP：
+#   image-01 在 21:9 宽幅里会把吉祥物画成大特写并压住标题区，
+#   所以 IP 用独立母版（configs/assets/brand-lobster.yaml）生成后本地贴入。
+#
+# 文案可用命令行覆盖：--title / --subtitle / --count / --tone
+
+id: top-banner
+label: 顶部广告条（左文 + IP 吉祥物）
+pipeline: banner
+
+outputDir: ./outputs
+fileNamePrefix: top-banner
+format: jpg
+
+target:
+  width: 1920
+  height: 320
+
+tone: black_gold
+layout: left
+variantCount: 3
+aspectRatio: 21:9
+
+# AI 底图提示词：只有背景，所有文字由本地排版层精确叠加
+prompt: |
+  【用途】ClawDao 官网 / 直播间顶部超宽广告条的纯背景底图（成品会被裁成 1920×320 的超宽横条）
+  【画面】只有背景，不要任何角色、动物、龙虾、人物、产品或实体物体。深灰磨砂玻璃质感，横向渐变（#232327 → #2b2b31），极简、高级、克制
+  【光效】画面右侧有柔和的暖金色光晕与细小星点粒子，用于衬托后期贴入的吉祥物；左侧三分之二保持干净的深灰低干扰区
+  【构图】所有光效元素集中在画面的垂直中间带（约中间 40% 高度内），画面上下各留出纯净空隙，裁成超宽横条后构图依然完整
+  【文字安全区（硬性约束）】画面中不要生成任何文字、字母、数字、Logo、水印、签名、伪文字、书本封面字或 UI 文案。所有文案均由后期本地排版层精确叠加，请保持预留区域为干净背景
+  【负面提示】角色、动物、龙虾、螃蟹、人物、物体、文字、字母、数字、Logo、水印、复杂背景、元素铺满画面
+
+# 背景压暗参数（压暗后 IP 与文字更突出）
+background:
+  darken: 0.8
+  saturation: 0.88
+
+# IP 资产（透明 PNG）
+ip:
+  enabled: true
+  dir: public/brand
+  asset: lobster-cutout.png
+  heightRatio: 0.8
+  rightMargin: 0.025
+
+# 文字叠层
+overlay:
+  category: top_banner
+  title: 你出想法，ClawDao帮你实现
+  subtitle: ""

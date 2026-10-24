@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--
+  probe-promo-blue.html —— 阶段 0 验证件：promo-blue 的 HTML/CSS 复刻版
+
+  用途：与现有 SVG 出图（configs/poster/promo-blue.yaml → scripts/gen-poster.ts）
+  并排比对，验证「HTML/CSS 当海报真源」是否可行。
+
+  与 SVG 版的对应关系：
+    - 画布 800×2000、纯色底 #007AFF、白卡信息区、2×2 卖点矩阵、二维码方框、页脚
+    - 所有字号 / 行高 / 容器宽度都按 SVG 渲染器的公式换算成 px，保证可比
+    - 每个文本元素带 data-base = 「SVG 版该行的基线 y（画布绝对坐标）」
+      渲染后由脚本注入的探针统一对齐基线 —— 这样两版图剩下的差异
+      只可能来自**换行/字宽**，也就是本次要验证的核心
+
+  占位符（由 scripts/html-poster-probe.ts 替换）：
+    {{qrDataUri}} —— 二维码 data URI
+    {{qrSize}}    —— 二维码边长（px）
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>promo-blue · HTML 复刻</title>
+<style>
+  /* ---- 画布 ---- */
+  :root {
+    --w: 800px;
+    --h: 2000px;
+    --bg: #007AFF;
+    --pad-x: 53.6px;          /* W * 0.067 */
+    --content-w: 692.8px;      /* W - 2 * pad-x */
+    --font: 'PingFang SC', 'Hiragino Sans GB', 'Heiti SC', 'Noto Sans CJK SC',
+            'Microsoft YaHei', Arial, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: var(--w);
+    height: var(--h);
+    background: var(--bg);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+
+  .poster {
+    position: relative;
+    width: var(--w);
+    height: var(--h);
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .txt {
+    position: absolute;
+    left: var(--pad-x);
+    width: var(--content-w);
+    text-align: center;
+    white-space: normal;
+  }
+
+  /* ---- 顶部标题区 ---- */
+  .kicker {
+    top: 128px;
+    font-size: 40px;            /* W * 0.05 */
+    font-weight: 800;
+    line-height: 60px;          /* size * 1.5 */
+    letter-spacing: 4px;        /* size * 0.1 */
+    color: #FFFFFF;
+  }
+
+  .title {
+    top: 242px;
+    font-size: 108px;           /* W * 0.135 */
+    font-weight: 800;
+    line-height: 129.6px;       /* size * 1.2 */
+    background: linear-gradient(180deg, #FFFFFF 0%, #EAF3FF 50%, #FFFFFF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    top: 447px;
+    width: 665.1px;             /* content-w * 0.96 */
+    left: 67.45px;              /* 居中：(800 - 665.1) / 2 */
+    font-size: 26px;            /* W * 0.0325 */
+    font-weight: 500;
+    line-height: 39px;          /* size * 1.5 */
+    color: #D6E7FF;
+    opacity: 0.95;
+  }
+
+  /* ---- 白色信息卡 ---- */
+  .panel {
+    position: absolute;
+    left: 80.6px;               /* pad-x + (content-w - panel-w) / 2 */
+    top: 632px;
+    width: 638.8px;             /* content-w * 0.922 */
+    height: 804px;              /* minHeight */
+    border-radius: 34px;
+    background: #FFFFFF;
+    border: 1.2px solid #FFFFFF;
+    box-shadow: 0 7.92px 19.8px rgba(11, 27, 51, 0.16);
+  }
+
+  .panel-title {
+    top: 69px;                  /* padding 40 + spacer 29 */
+    font-size: 46px;            /* W * 0.0575 */
+    font-weight: 800;
+    line-height: 55.2px;        /* size * 1.2 */
+    background: linear-gradient(180deg, #007AFF 0%, #0A6FE0 50%, #168CFF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .panel-note {
+    top: 154px;
+    font-size: 20.8px;          /* W * 0.026 */
+    font-weight: 500;
+    line-height: 32.24px;       /* size * 1.55 */
+    color: #9AA0A8;             /* card.textFaint */
+  }
+
+  .grid {
+    position: absolute;
+    left: 40px;                 /* panel padding */
+    top: 239.8px;
+    width: 558.8px;             /* inner-w = panel-w - padding * 2 */
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .cell {
+    width: 279.4px;             /* inner-w / 2 */
+    text-align: center;
+  }
+
+  .cell-title {
+    font-size: 34px;            /* W * 0.0425 */
+    font-weight: 800;
+    line-height: 43.52px;       /* size * 1.28 */
+    color: #007AFF;             /* card.gold */
+    width: 257.1px;             /* col-w * 0.92 */
+    margin: 0 auto;
+  }
+
+  .cell-desc {
+    font-size: 26px;            /* W * 0.0325 */
+    font-weight: 400;
+    line-height: 33.8px;        /* size * 1.3 */
+    color: #6F7378;             /* card.textDim */
+    opacity: 0.95;
+    width: 245.9px;             /* col-w * 0.88 */
+    margin: 40px auto 0;        /* titleGap */
+  }
+
+  .cell.row2 { margin-top: 49px; }  /* rowGap */
+
+  .panel-cta {
+    top: 621.04px;
+    font-size: 38px;            /* W * 0.0475 */
+    font-weight: 800;
+    line-height: 45.6px;        /* size * 1.2 */
+    background: linear-gradient(180deg, #007AFF 0%, #0A6FE0 50%, #168CFF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ---- 二维码 ---- */
+  .qr-frame {
+    position: absolute;
+    left: 165.5px;              /* pad-x + (content-w - 469) / 2 */
+    top: 1305px;                /* 1436 - overlap 131 */
+    width: 469px;
+    height: 469px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    border: 1.2px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qr-frame img {
+    width: var(--qr-size, 300px);
+    height: var(--qr-size, 300px);
+    image-rendering: pixelated;
+    display: block;
+  }
+
+  .qr-caption {
+    top: 1781px;
+    font-size: 30px;            /* W * 0.0375 */
+    font-weight: 500;
+    line-height: 45px;          /* size * 1.5 */
+    color: #00234A;
+  }
+
+  /* ---- 页脚 ---- */
+  .footer {
+    top: 1893.6px;              /* 1868 + W*0.042 */
+    font-size: 26px;            /* W * 0.0325 */
+    font-weight: 500;
+    line-height: 40.3px;        /* size * 1.55 */
+    letter-spacing: 1.56px;     /* size * 0.06 */
+    color: #D6E7FF;
+  }
+
+  .footer-sub {
+    top: 1957.6px;              /* 1868 + W*0.042 + size + subGap 30 */
+    font-size: 24px;            /* W * 0.03 */
+    font-weight: 500;
+    line-height: 36px;          /* size * 1.5 */
+    letter-spacing: 0.96px;     /* size * 0.04 */
+    color: #D6E7FF;
+    opacity: 0.78;
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="txt kicker"  data-key="kicker"  data-base="168">亿检链 · 智能体工具课</div>
+  <div class="txt title"   data-key="title"   data-base="350">亿检智能体</div>
+  <div class="txt subtitle" data-key="subtitle" data-base="473">零基础实操训练营 · 从下载安装到跑通第一个智能体</div>
+
+  <div class="panel">
+    <div class="txt panel-title" data-key="panel-title" data-base="747">五个模块，轻松上手</div>
+    <div class="txt panel-note"  data-key="panel-note"  data-base="806.8">10+ 节实操课 · 作业模板 · 直播答疑 · 班级群交流</div>
+
+    <div class="grid">
+      <div class="cell row1">
+        <div class="cell-title" data-key="c1t" data-base="905.8">环境安装</div>
+        <div class="cell-desc"  data-key="c1d" data-base="981.32">下载安装、账号权限、基础配置</div>
+      </div>
+      <div class="cell row1">
+        <div class="cell-title" data-key="c2t" data-base="905.8">提示词结构</div>
+        <div class="cell-desc"  data-key="c2d" data-base="981.32">需求拆解、模板写法、参数调试</div>
+      </div>
+      <div class="cell row2">
+        <div class="cell-title" data-key="c3t" data-base="1105.92">工具串接</div>
+        <div class="cell-desc"  data-key="c3d" data-base="1181.44">多工具协作、参数调整、异常处理</div>
+      </div>
+      <div class="cell row2">
+        <div class="cell-title" data-key="c4t" data-base="1105.92">验收复盘</div>
+        <div class="cell-desc"  data-key="c4d" data-base="1181.44">过程记录、验收清单、迭代方法</div>
+      </div>
+    </div>
+
+    <div class="txt panel-cta" data-key="panel-cta" data-base="1291.04">亿检链邀请你加入</div>
+  </div>
+
+  <div class="qr-frame"><img src="{{qrDataUri}}" alt="课程二维码" /></div>
+  <div class="txt qr-caption" data-key="qr-caption" data-base="1811">扫码查看课程详情</div>
+
+  <div class="txt footer"     data-key="footer"     data-base="1927.6">工具怎么装 · 步骤怎么做 · 结果怎么验</div>
+  <div class="txt footer-sub" data-key="footer-sub" data-base="1981.6">利姆斯科技 · 亿检链团队</div>
+</div>
+</body>
+</html>

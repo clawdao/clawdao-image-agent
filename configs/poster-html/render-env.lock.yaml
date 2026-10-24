@@ -1,0 +1,43 @@
+# render-env.lock.yaml — HTML 海报渲染环境锁（浏览器 + 上下文）
+#
+# 为什么必须锁：
+#   同一份 YAML 配置，在不同机器 / 不同 Chromium 版本 / 不同字体环境下会排出**不同的图**
+#   （字体回退、字距、GPU 光栅化、抗锯齿都会变）。出图链路一旦切到 HTML，
+#   环境漂移就等于「同样的配置出不同的成品」，商品图这种要过平台审核的场景不能接受。
+#
+# 字体部分单独放在 fonts.yaml（字重与 family 命中是另一类问题）。
+#
+# 校验：bun run scripts/check-render-env.ts --probe
+id: poster-html-env
+version: 1
+updated: '2026-10-24'
+
+browser:
+  # 固定用 Playwright 自带 Chromium，不吃系统 Chrome（系统版会随系统升级漂移）
+  channel: chromium
+  revision: 1248
+  browserVersion: 156.0.8078.4
+  playwrightVersion: 1.64.1
+  # 启动参数：关掉一切会引入不确定性的开关
+  args:
+    - --no-sandbox
+    - --font-render-hinting=none
+    - --disable-lcd-text
+    - --force-color-profile=srgb
+    - --disable-partial-raster
+    - --disable-skia-runtime-opts
+    - --disable-font-subpixel-positioning
+    - --disable-gpu
+    - --hide-scrollbars
+    - --deterministic-mode
+
+context:
+  deviceScaleFactor: 1
+  colorScheme: light
+  reducedMotion: reduce
+  forcedColors: none
+  locale: zh-CN
+  timezoneId: Asia/Shanghai
+  hasTouch: false
+  isMobile: false
+  javaScriptEnabled: true

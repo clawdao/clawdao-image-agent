@@ -1,0 +1,30 @@
+# 品牌 IP 吉祥物母版（橙色卡通龙虾）
+#
+# 背景：image-01 在 21:9 宽幅里画 IP 时 invariably 画成大特写并压住标题区。
+# 解法是两阶段：
+#   1) 先用 1:1 生成一张完整全身的 IP 母版（存 public/brand/ 作为品牌资产）
+#   2) 再以它为 subject_reference 去生成广告条，模型会把 IP 画小、放在右侧
+#
+# 母版生成后建议再跑一次抠图（configs/assets/brand-cutout.yaml），
+# 产出透明 PNG 再贴进 banner。
+
+id: brand-lobster
+label: 品牌 IP 吉祥物母版（龙虾）
+pipeline: ip-master
+
+# 母版落在品牌资产目录（供后续复用），副本同时落到 outputs/_brand 便于查看
+assetDir: public/brand
+copyDir: ./outputs/_brand
+fileNamePrefix: lobster
+
+variantCount: 1
+aspectRatio: 1:1
+
+prompt: |
+  【主体】一只可爱的橙色卡通龙虾吉祥物，Q版圆润造型，3D 玩具质感，大眼睛、憨厚微笑，造型简洁干净
+  【构图】完整全身入镜，从头顶触角到尾尖全部可见，竖直居中，占画面高度约 70%，四周留出干净空隙，不要裁切身体
+  【打光】柔和影棚打光，顶部柔光加轻微轮廓光，体积感强
+  【背景】纯深灰磨砂渐变背景（#232327 → #2b2b31），无任何图案
+  【文字安全区（硬性约束）】画面中绝对不要出现任何文字、字母、数字、Logo、水印、签名或伪文字
+  【风格】高级 3D 吉祥物渲染，材质略带哑光毛毡质感，非写实生物，非特写
+  【负面提示】写实生物、真实龙虾、微距特写、裁切身体、复杂背景、文字、字母、数字、水印、Logo、乱码

@@ -1,0 +1,25 @@
+# 品牌 IP 抠图（去背景）
+#
+# 目的：IP 母版是 1024×1024 的影棚图，带深灰渐变背景。直接丢给
+# image-01 做 subject_reference，模型会把整块背景一起搬过去。
+# 这里按「橙色度」抠出角色本体，产出透明 PNG，合成时更可控。
+#
+# 算法：主体是橙色，背景是中性灰（R≈G≈B）。
+#   橙度 o = R - B，饱和度 s = max - min
+#   o 越大越可能是主体，阈值之上渐变出软边 alpha
+#
+# 用法：bun run scripts/gen-asset.ts --config configs/assets/brand-cutout.yaml
+#       （输入 / 输出可用 --input / --output 覆盖）
+
+id: brand-cutout
+label: 品牌 IP 抠图（去背景）
+pipeline: cutout
+
+input: public/brand/lobster.png
+output: public/brand/lobster-cutout.png
+
+# 橙度下限（低于此判为背景）/ 上限（高于此判为实心主体）
+orangeMin: 18
+orangeFull: 52
+# 饱和度下限：主体橙色饱和度高，影棚地面反光饱和度低，据此剔除
+saturationMin: 26

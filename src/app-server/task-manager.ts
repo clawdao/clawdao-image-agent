@@ -19,6 +19,7 @@ import {homedir} from 'node:os';
 import {analyzeImages} from '../lib/multimodal-analyzer';
 import {smartGenerate} from '../lib/image-generator';
 import {applyTextOverlay} from '../lib/text-overlay';
+import {composeBanner, defaultBrandAssetDir, resolveBrandAsset} from '../lib/banner-compositor';
 import {getPreset} from '../lib/presets';
 import {createStorage, asLegacyMap, type StorageTask} from '../lib/storage';
 
@@ -49,6 +50,17 @@ export interface RuntimeConfig {
   imageModel?: string;
   /** 测试或纯背景处理可关闭；生产默认开启精确文字叠加 */
   textOverlay?: boolean;
+  /**
+   * 品牌资产目录（IP 抠图稿）。默认 public/brand。
+   * 目录里没有 lobster-cutout.png 时自动降级为“无 IP 的纯背景”，不会报错。
+   */
+  brandAssetDir?: string;
+  /**
+   * 图像生成函数的依赖注入口（默认真实 smartGenerate）。
+   * 测试借此替换行为，而不必用 mock.module —— 后者是进程级全局替换，
+   * 会污染同进程里其它测试文件对 image-generator 的导入。
+   */
+  generate?: typeof smartGenerate;
 }
 
 const DEFAULT_VARIANT_COUNT = 1;
@@ -150,6 +162,8 @@ export async function createTask(input: TaskInput, cfg: RuntimeConfig): Promise<
     refImages: input.refImages ?? [],
     theme: input.theme,
     ratio: preset.ratio,
+    scene: input.scene as Task['scene'],
+    customPrompt: input.customPrompt,
     variantConfig,
     status: 'pending',
     progress: 0,
@@ -200,7 +214,8 @@ async function execute(task: Task, input: TaskInput, cfg: RuntimeConfig): Promis
   const ts = Date.now();
   const prefix = cfg.urlPrefix ?? '/outputs/';
 
-  const result = await smartGenerate({
+  const generateFn = cfg.generate ?? smartGenerate;
+  const result = await generateFn({
     category: input.category,
     theme: input.theme,
     aspectRatio: preset.ratio,
@@ -228,14 +243,24 @@ async function execute(task: Task, input: TaskInput, cfg: RuntimeConfig): Promis
   }
 
   // 落盘：每张变体独立命名 <category>_<ts>_<i>.jpeg
+  // 流水线：AI 纯背景 → 裁到 preset 目标尺寸 + 贴 IP 资产 → 本地叠字
+  const brandDir = cfg.brandAssetDir ?? defaultBrandAssetDir();
+  const ipAssetPath =
+    (input.useLobster ?? true) ? resolveBrandAsset(brandDir, 'lobster-cutout.png') : null;
   const variants: Array<{url: string; width: number; height: number; bytes: number}> = [];
   for (let i = 0; i < b64List.length; i++) {
     const name = `${input.category}_${ts}_${i}.jpeg`;
     const absPath = join(cfg.outputDir, name);
     const raw = Buffer.from(b64List[i], 'base64');
+    const composed = await composeBanner(raw, {
+      width: preset.size.w,
+      height: preset.size.h,
+      ipAssetPath,
+      colorTone: input.colorTone ?? 'blue_purple',
+    });
     const rendered = cfg.textOverlay === false
-      ? {buffer: raw, width: preset.size.w, height: preset.size.h}
-      : await applyTextOverlay(raw, {
+      ? {buffer: composed.buffer, width: composed.width, height: composed.height}
+      : await applyTextOverlay(composed.buffer, {
           category: input.category,
           theme: input.theme,
           colorTone: input.colorTone ?? 'blue_purple',

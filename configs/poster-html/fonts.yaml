@@ -1,0 +1,85 @@
+# fonts.yaml — HTML 海报字体锁（family 命中 + 字重命中）
+#
+# 为什么单独锁（P1-T2）：
+#   浏览器对「请求的 family 不存在」或「请求的字重不存在」的请求**不会报错**，
+#   它会静默回退到后面的字体 / 合成一个粗体。
+#   表面看「渲染成功」，实际字宽、字形、断行全变了 —— 而且没有任何警告。
+#   所以这里把每个 family、每个字重的**实际命中**显式登记下来，
+#   渲染前校验：不允许出现「未登记的静默回退」。
+#
+#   登记方式：文件级（读 OS/2.usWeightClass + name 表）+ 浏览器级（像素 coverage 比对）双重确认。
+#   mode 三态：
+#     native     —— 请求的字重就是该 face 自己的字重
+#     nearest    —— 文件里没这一档，浏览器落到**另一档真实 face**（字形是真的，只是更粗/更细）
+#     synthesized —— 浏览器**合成加粗**（字形被改过），视觉上不是设计的那一档
+#
+# 本机实测结论（2026-10-24，macOS arm64，Chromium 156.0.8078.4）：
+#   • PingFang SC **未安装**（系统与用户字体目录都没有）→ 旧字体栈的第一项是空转
+#   • Hiragino Sans GB 是 TTC，4 个 face，但本机只装了 2 个：
+#       W3 (usWeightClass 300) —— "Hiragino Sans GB W3" / "冬青黑体简体中文 W3"
+#       W6 (usWeightClass 600) —— "Hiragino Sans GB W6" / "冬青黑体简体中文 W6"
+#       ".Hiragino Sans GB Interface *" 与繁体名「冬青黑體簡體中文 *」**解析不到**
+#     W3 与 W6 共享 legacy family "Hiragino Sans GB"，CSS 只写这一个名字时，
+#     落 W3 还是 W6 **由字重决定**（300-500 → W3，600+ → W6）
+#   • 优设标题黑（YouSheBiaoTiHei）只有 400 一档：
+#     300/400/500 → 同一 face；600+ → 浏览器**合成加粗**（字形被改）
+#
+# 校验：bun run scripts/check-render-env.ts --probe
+id: poster-html-fonts
+version: 1
+updated: '2026-10-24'
+
+stacks:
+  title:
+    # 标题体：自研艺术字，只有一档字重（600+ 会被浏览器合成加粗）
+    family: YouSheBiaoTiHei
+    stack: "'YouSheBiaoTiHei', sans-serif"
+    required: [YouSheBiaoTiHei]
+    # 旧 SVG 管线的字栈（含 STKaiti / Kaiti SC / Hiragino / PingFang / Noto），
+    # 本机除 YouSheBiaoTiHei 外全部落空 —— 留档以便对照
+    legacyStack: "'YouSheBiaoTiHei', 'STKaiti', 'Kaiti SC', 'Hiragino Sans GB', 'PingFang SC', 'Noto Sans CJK SC', sans-serif"
+  body:
+    # 正文体：Hiragino Sans GB（W3 常规 / W6 粗）
+    family: Hiragino Sans GB
+    stack: "'Hiragino Sans GB', sans-serif"
+    required: [Hiragino Sans GB]
+    legacyStack: "'PingFang SC', 'Hiragino Sans GB', 'Heiti SC', 'Noto Sans CJK SC', 'Microsoft YaHei', Arial, sans-serif"
+
+# 渲染器用到的字重 → 实际命中的 face
+#
+# 注意：SVG 管线（librsvg）用的是 weight 400/500/600/700/800 五档，
+# HTML 侧必须逐档登记，否则「换个字重排版就悄悄变了」。
+weights:
+  - family: Hiragino Sans GB
+    file: '/System/Library/Fonts/Hiragino Sans GB.ttc'
+    fileWeights: [300, 600]
+    map:
+      300: {resolved: 300, mode: native, note: 'W3 常规'}
+      400: {resolved: 300, mode: nearest, note: '正文常规档 → W3（真实 face，非合成）'}
+      500: {resolved: 300, mode: nearest, note: '次强调档 → W3（真实 face，非合成）'}
+      600: {resolved: 600, mode: native, note: '强调档 → W6'}
+      700: {resolved: 600, mode: nearest, note: '标题档 → W6（真实 face，非合成）'}
+      800: {resolved: 600, mode: nearest, note: '重标题档 → W6（真实 face，非合成）'}
+  - family: YouSheBiaoTiHei
+    file: '~/Library/Fonts/优设标题黑.ttf'
+    fileWeights: [400]
+    map:
+      300: {resolved: 400, mode: nearest, note: '只有 400 一档'}
+      400: {resolved: 400, mode: native, note: '艺术字唯一档'}
+      500: {resolved: 400, mode: nearest, note: 'Chromium 合成加粗阈值是 600，500 不合成'}
+      600: {resolved: 400, mode: synthesized, note: '浏览器合成加粗（字形被改）'}
+      700: {resolved: 400, mode: synthesized, note: '浏览器合成加粗（字形被改）'}
+      800: {resolved: 400, mode: synthesized, note: '浏览器合成加粗（字形被改）'}
+
+# 语义档位 → CSS 变量里真正写的 font-weight
+semantic:
+  body: 400
+  medium: 500
+  strong: 700
+  heavy: 800
+  art: 400
+
+# 字体文件指纹（换字库 = 换图，必须能被 diff 出来）
+files:
+  YouSheBiaoTiHei: '~/Library/Fonts/优设标题黑.ttf'
+  Hiragino Sans GB: '/System/Library/Fonts/Hiragino Sans GB.ttc'

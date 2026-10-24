@@ -1,0 +1,137 @@
+# live-cover.yaml —— 直播间封面（竖版 · 浅色科技风）
+#
+# 版式 1:1 对齐参考图 `.clawdao-uploads/att-1792595332920-h7grkb.png`（1600×2848）。
+# 下列百分比均为参考图实测值（像素级反推，见 scripts/tmp-geometry.ts）：
+#   品牌图标   x 4.6%..14.2%   y 4.0%..9.4%
+#   主标题     x 10.8%..89.1%  y 20.9%..24.6%（单行，字号 ≈ 104px）
+#   副标题     x 18.1%..82.0%  y 27.5%..28.9%（字号 ≈ 45px）
+#   功能卡     x 22%..78%      y 32.4%..38.5%（3 张，每张 288px，间距 16px）
+#   主视觉     x 12.2%..91.7%  y 56.2%..81.8%
+#   地台渐变   y 78%..100%（蓝→紫，底部压暗）
+#
+# 尺寸：1600×2848（视频号直播封面竖版比例 ≈ 9:16）
+# 改尺寸不用改配置：--size 1080x1920 / --sizes 1600x2848,1080x1920
+#
+# 想出 AI 主视觉：bun run scripts/gen-poster.ts live-cover --ai
+# 想换文案：改本文件，或命令行 --title / --subtitle 临时覆盖
+
+id: live-cover
+label: 直播间封面（浅色科技风）
+kind: live-cover
+
+tone: tech_light
+background: aurora
+anchor: top
+
+size:
+  width: 1600
+  height: 2848
+
+padding:
+  top: 0
+  bottom: 0
+
+brand:
+  logo: public/brand/lobster-badge.png
+  text: ClawDao
+  position: top-left
+  style: plain
+  logoHeight: 130
+  logoWidth: 130
+  textScale: 0.045
+  offsetX: 93
+  offsetY: 128
+
+# 右下角品牌角标（对应参考图右下角那枚小标识的位置与体量）
+cornerMark:
+  logo: public/brand/lobster-badge.png
+  text: ClawDao
+  position: bottom-right
+  logoHeight: 46
+  logoWidth: 46
+  textScale: 0.019
+  offsetX: 24
+  offsetY: 23
+  color: '#FFFFFF'
+
+compliance: v8
+
+blocks:
+  # —— 顶部留白：把主标题顶边压到参考图的 20.9% ——
+  - kind: spacer
+    heightRatio: 0.205
+    gapAfter: 0
+
+  # —— 主标题区（单行，与参考图一致）——
+  - kind: centerTitle
+    title: 把重复工作，交给数字员工
+    subtitle: 一个软件，顶一屋子SaaS｜自己长出来的企业流程
+    font: sans
+    titleScale: 0.065
+    subtitleScale: 0.028
+    subtitleGap: 90
+
+  # —— 三张功能卡片 ——
+  # 参考图实测：卡片 x 20.9%..79%（宽 296，间距 21），y 32.4%..38.5%（高 174）
+  # 卡片内部：左上角线稿小图标（42px）+ 下方一行标题（30px），其余留白
+  - kind: features
+    columns: 3
+    widthRatio: 0.581
+    gap: 21
+    height: 174
+    radius: 24
+    padding: 30
+    iconScale: 0.026
+    iconGap: 33
+    titleScale: 0.018
+    titleLineHeight: 1.2
+    gapBefore: 100
+    items:
+      - title: 内容自动生成
+        iconShape: envelope
+        iconColor: '#12141A'
+        gradient: ['#B9FEFB', '#FFFFFF']
+        gradientType: radial
+        stroke: '#A8D8DA'
+      - title: 流程自动执行
+        iconShape: flow
+        iconColor: '#12141A'
+        gradient: ['#D8CFEE', '#FFFFFF']
+        gradientType: radial
+        stroke: '#D2CAEF'
+      - title: 长任务自动运转
+        iconShape: loop
+        iconColor: '#12141A'
+        gradient: ['#EDDFFF', '#FFFFFF']
+        gradientType: radial
+        stroke: '#DCD3F0'
+
+  # —— 弹性占位：把主视觉压到参考图的 56% 位置 ——
+  - kind: spacer
+    fill: true
+    gapBefore: 40
+    gapAfter: 40
+
+  # —— 主视觉 ——
+  # src：本地吉祥物（零 API 成本）；aiPrompt：--ai 时用 image-01 生成场景图替换
+  - kind: visual
+    src: public/brand/lobster-cutout.png
+    aiPrompt: >-
+      【用途】直播封面下半部主视觉，成品会在本地叠加中文排版
+      【画面】白色极简工作台上悬浮着一台超薄笔记本电脑（屏幕朝向观者，屏幕内是抽象的深色数据看板，只有色块与图表，不要任何文字），
+      电脑右侧站着一个拟人化的数字员工机器人：白色与银灰金属机身，胸口有青蓝色发光条，头部是一块深色屏幕，
+      屏幕上有两只青蓝色发光的眼睛，机器人头顶有一对珊瑚红的小机械钳，姿态友好、微微侧身
+      【光效】底部蓝→青→紫的柔和极光地台，机器人与电脑在地面上投下柔和阴影
+      【风格】高精度 3D 渲染插画，干净、克制、偏企业科技风
+      【禁止】不要文字、字母、数字、Logo、水印、二维码、图表数值、界面文字
+    heightRatio: 0.455
+    widthRatio: 0.8
+    fit: contain
+    trim: true
+    aiAspect: '16:9'
+    feather: 0.07
+
+  # —— 底部留白：主视觉底边落在参考图的 81.8% ——
+  - kind: spacer
+    heightRatio: 0.182
+    gapBefore: 0
