@@ -27,7 +27,7 @@ import {
   ReloadOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';
-import {useEffect, useMemo, useState} from 'react';
+import {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 import {ImageUploader} from '../components/ImageUploader';
 import {CategorySelector} from '../components/CategorySelector';
 import {PromptEditor} from '../components/PromptEditor';
@@ -37,6 +37,9 @@ import {api, type HealthData} from '../lib/api';
 import {useTaskStore} from '../stores/task-store';
 import type {Category, ColorTone, SceneKey, Task} from '@shared/types/index';
 import {SCENES} from '@lib/scenes';
+
+// 工作室会拉进整个 Fabric 引擎（约 300KB+），按需加载，不进主 chunk。
+const PosterStudio = lazy(() => import('./PosterStudio'));
 
 const {Title, Text, Paragraph} = Typography;
 const {useBreakpoint} = Grid;
@@ -59,6 +62,7 @@ export default function App() {
   const screens = useBreakpoint();
   const [step, setStep] = useState(1);
   const [showHistory, setShowHistory] = useState(false);
+  const [studio, setStudio] = useState(false);
   const [health, setHealth] = useState<HealthData | null>(null);
   const [healthError, setHealthError] = useState('');
 
@@ -159,7 +163,11 @@ export default function App() {
     }
   };
 
-  const content = showHistory ? (
+  const content = studio ? (
+    <Suspense fallback={<div style={{padding: 48, textAlign: 'center'}}>正在加载海报编辑器…</div>}>
+      <PosterStudio />
+    </Suspense>
+  ) : showHistory ? (
     <HistoryView
       history={history}
       loading={historyLoading}
@@ -270,9 +278,21 @@ export default function App() {
             )}
             <Button
               icon={showHistory ? <HomeOutlined /> : <HistoryOutlined />}
-              onClick={() => setShowHistory((value) => !value)}
+              onClick={() => {
+                setStudio(false);
+                setShowHistory((value) => !value);
+              }}
             >
               {showHistory ? '返回工作台' : `历史任务 ${history.length ? `(${history.length})` : ''}`}
+            </Button>
+            <Button
+              type={studio ? 'primary' : 'default'}
+              onClick={() => {
+                setShowHistory(false);
+                setStudio((value) => !value);
+              }}
+            >
+              {studio ? '返回工作台' : '海报工作室'}
             </Button>
           </Space>
         </div>
@@ -280,7 +300,7 @@ export default function App() {
 
       <Layout.Content className="app-content">
         <div className="app-content__inner">
-          {!showHistory && (
+          {!showHistory && !studio && (
             <div className="hero">
               <div>
                 <Text className="hero__eyebrow">CLAWDAO / IMAGE FACTORY</Text>
@@ -297,7 +317,7 @@ export default function App() {
             </div>
           )}
 
-          {health && !health.keyConfigured && !showHistory && (
+          {health && !health.keyConfigured && !showHistory && !studio && (
             <Alert
               type="warning"
               showIcon

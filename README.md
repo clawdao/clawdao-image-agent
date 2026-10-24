@@ -69,7 +69,7 @@ bun run dev
 clawdao-image-factory/
 ├── docs/v0/v0.1/        # 5 份开发文档（README/api/prompt-spec/testing/deployment）
 ├── prompts/             # 4 类提示词模板（cover/top-banner/mid-banner/popup）
-├── public/brand/        # 品牌资产（Logo / IP / 色板）
+├── public/brand/        # 品牌资产（IP 母版 lobster.png / 抠图稿 lobster-cutout.png / 色板）
 ├── outputs/             # 运行产物（images / _archive / clawdao.db）
 ├── .archive/            # 历史归档（egg.js 后端 → server-egg-legacy/）
 ├── src/                 # Bun 后端 + 共享 lib
@@ -78,7 +78,17 @@ clawdao-image-factory/
 │   ├── types/           # 共享 TS 类型
 │   └── index.ts         # Bun HTTP 服务入口（端口 18795）
 ├── web/                 # Vite + React 前端（端口 5182）
-├── scripts/start-all.ts # 一键起前后端
+├── configs/              # **配置驱动：新增版本 / 素材只加 YAML，不加脚本**
+│   ├── shop-listing/    # 商品图配置（v2 / v3 / v4 / v7 / v8）
+│   ├── compliance/      # 合规规则（词库 + 断言，extends 继承 _base.yaml）
+│   └── assets/          # 其它素材（广告条 / IP 母版 / 抠图）
+├── scripts/             # 统一出图入口 + 共享渲染流水线
+│   ├── start-all.ts     # 一键起前后端
+│   ├── gen-shop-listing.ts     # 商品图统一入口（--config / 版本 id / --theme / --out）
+│   ├── check-listing-compliance.ts # 合规检查统一入口（规则来自 configs/compliance/）
+│   ├── gen-asset.ts     # 其它素材统一入口（广告条 / IP 母版 / 抠图 / 预览）
+│   ├── shop-listing-render.ts # 共享渲染流水线
+│   └── lib/             # 配置加载 + 引用解析 + 内容渲染 + 合规规则
 └── .clawdao/project.json # ClawDao 应用清单
 ```
 
@@ -102,6 +112,56 @@ clawdao-image-factory/
 4. **任务队列内置 Map**：MVP 阶段用内存 Map 做任务状态，避免 Bull/Redis 依赖启动慢。
 5. **5 类比例预设**：cover 9:16 / top-banner 21:9 / mid-banner 16:5 / popup 1:1 / custom 16:9。
 6. **单端口可部署**：`bun run build:web` 后 `src/index.ts` 同时托管 API + 静态前端，部署只需一个进程。
+7. **广告条三段式流水线**：image-01 在 21:9 宽幅里必然把 IP 画成大特写并压住标题区，因此广告条走
+   `smartGenerate（AI 出纯背景）` → `banner-compositor（裁到 preset 尺寸 + 本地贴 IP 抠图稿）` → `text-overlay（艺术字叠层）`。
+   IP 形象 100% 保真、位置尺寸精确可控；文字由本地 SVG 排版层叠加，模型不碰文案。
+
+### 顶部广告条怎么出
+
+```bash
+# 一次性出图（不走服务队列，直接落 outputs/）
+bun run scripts/gen-asset.ts top-banner --title "你出想法，ClawDao帮你实现" --count 3
+
+# 居中商务版式（黑金风格：居中艺术字 + 水平光带 + 副标题 + 底部装饰线，不放 IP）
+bun run scripts/gen-asset.ts center-banner --title "你出想法 我给结果" --count 2
+bun run scripts/gen-asset.ts center-banner --title "你出想法 我给结果" --subtitle "企业老板 | 实体商家" --count 2
+
+# 列出所有素材配置
+bun run scripts/gen-asset.ts --list
+
+# 或在应用内提交（UI / API 均可）
+curl -X POST http://localhost:18795/api/task/create \
+  -H 'Content-Type: application/json' \
+  -d '{"category":"top_banner","theme":{"title":"你出想法，ClawDao帮你实现"},"colorTone":"black_gold","useLobster":true,"variantCount":2}'
+```
+
+两个版式的区别：左文右 IP 版把吉祥物贴在右侧（IP 抠图稿缺失时自动降级为纯背景）；
+居中版把主标题放在画面正中，标题下方一条水平光带，副标题与三段金色装饰线依次向下排布，
+顶部暖金光晕与右上角压暗均由本地 SVG 绘制，不受 AI 随机结果影响。
+
+## 🖼️ 商品图（小店上架图）
+
+商品图走**配置驱动**：内容常量、海报排版、详情页文案、合规规则全部在 `configs/` 里，
+出图与自查各只有一个脚本入口。
+
+```bash
+# 列出所有商品图配置
+bun run scripts/gen-shop-listing.ts --list
+
+# 出图（当前交付版 v8）
+bun run scripts/gen-shop-listing.ts v8
+bun run scripts/gen-shop-listing.ts v8 --theme blue --out ./outputs/shop-listing-v8-blue
+
+# 上架前合规自查（命中即 exit 1）
+bun run scripts/check-listing-compliance.ts v8
+```
+
+- 内容常量在 `configs/shop-listing/v8.yaml` 的 `content` 段（模块 / 受众 / 目标客户 / FAQ）。
+- 海报排版在 `posters` 段（`blocks` 即渲染指令），详情页文案在 `copy` 段（排版指令）。
+- 两边都用 `{{content.modules.M1.title}}` 这类引用指向同一份常量 —— **改一处，图与文案同步变**。
+- 合规规则在 `configs/compliance/v8.yaml`（词库 + 语义红线 + 标题结构断言），检查器不含版本分支。
+
+详见 `AGENTS.md` 的「配置驱动架构」一节。
 
 ## 📚 文档
 
