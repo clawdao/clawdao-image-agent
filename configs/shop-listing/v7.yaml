@@ -1,0 +1,730 @@
+id: v7
+label: AI数智化系统自我进化实战营（V7 · 清新绿 · 已被平台驳回，仅供对照）
+outputDir: ./outputs/shop-listing-v7
+theme: fresh
+compliance: ./configs/compliance/v7.yaml
+vars:
+  titleModifier: 数智化实战
+  titleMain: AI数智化系统自我进化实战营
+  titleLines: AI数智化系统自我进化实战营
+  enLabel: DIGITAL EVOLUTION CAMP
+  brandFull: 利姆斯科技 · 亿检链团队
+product:
+  name: AI数智化系统自我进化实战营
+  category: 虚拟商品 · 数字课程（技术实战）
+  brand: 利姆斯科技 · 亿检链团队
+  delivery: 10+节Agent智能体实战课程 + 直播咨询 + 作业模板 + 社群答疑
+  gifts: 选题智能体 + 公众号智能体（内容创作辅助）
+  position: 人人可学 · 人人可用 · 人人能会
+brand:
+  logo: ./assets/shop-listing/lims-logo.png
+  text: 亿检链
+author:
+  name: 顺道大叔
+  role: 亿检链创始人 · 开发者
+  avatar: ./assets/shop-listing/author-avatar.png
+  bullets:
+    - 亿检链平台联合创始人
+    - 《Node.js 区块链开发》《Web3.0 数字化实战》作者
+    - 200+ 企业客户咨询高级顾问
+    - 军工、政府、企业等重磅案例
+content:
+  modules:
+    - label: M1
+      title: 智能体安装配置与调试
+      lines:
+        - 零基础装好智能体，完成环境配置与参数调试，跑通第一个可用的智能体。
+    - label: M2
+      title: 提示词与需求模板
+      lines:
+        - 拆解提示词结构，沉淀需求模板。
+        - 把零散信息整理成结构化需求，重复提问变成可复用资产。
+    - label: M3
+      title: 系统自我进化机制体验
+      lines:
+        - 体验系统自我进化机制，看懂反馈—调整—再验证的持续优化循环。
+    - label: M4
+      title: 业务系统搭建
+      lines:
+        - 以公众号运营自动化系统为例，从零搭出「选题-写作-作图-排版-发布」全流程。
+    - label: M5
+      title: 效率工具落地
+      lines:
+        - 把智能体接进日常工具，沉淀可复用的操作方法。
+        - 流程复用：下一次直接调用，日常流程真正提效。
+  audience:
+    - tag: 企业高管
+      title: 让 AI 落进真实流程
+      lines:
+        - 不想再买一套概念
+    - tag: 实体老板
+      title: 需求 / 交付 / 复盘
+      lines:
+        - 哪一环能被接管
+    - tag: 创业者
+      title: 一个人干一支团队的活
+      lines:
+        - 从第一天就系统化
+    - tag: 自媒体 · 超级个体
+      title: 内容创作辅助
+      lines:
+        - 内容产能与素材加工
+  targets:
+    - tag: 落地难
+      title: 企业高管
+      lines:
+        - 想把 AI 落进公司流程
+    - tag: 流程靠人扛
+      title: 实体老板
+      lines:
+        - 需求交付复盘
+    - tag: 起步期
+      title: 创业者
+      lines:
+        - 一个人干一支团队
+    - tag: 经验沉淀
+      title: 自媒体 / 超级个体
+      lines:
+        - 内容产能与素材加工
+  faq:
+    - label: Q1
+      title: 上课需要准备什么？
+      lines:
+        - 一台电脑。安装包与环境自检清单课前发放。
+    - label: Q2
+      title: 10+ 节课程怎么安排？
+      lines:
+        - 按五个模块顺序推进，每个模块都有对应的作业模板，边做边沉淀。
+    - label: Q3
+      title: 直播咨询怎么参加？
+      lines:
+        - 报名后进班级群，群内通知直播时间与答疑安排。
+    - label: Q4
+      title: 没有技术背景能跟上吗？
+      lines:
+        - 能。第一个模块从下载安装开始手把手带你做，边做边形成技能积累。
+    - label: Q5
+      title: 课程会包含什么？
+      lines:
+        - 方法、工具与作业模板（含提示词模板与项目搭建清单）；能应用到什么程度，是你自己练出来的。
+  targetTable:
+    - who: 企业高管
+      gain: 把 AI 落进公司真实流程，而不是再买一套概念
+    - who: 实体老板
+      gain: 需求、交付、复盘——看清哪一环能被 AI 接管
+    - who: 创业者
+      gain: 一个人干一支团队的活，从第一天就系统化
+    - who: 自媒体 / 超级个体
+      gain: 同时提升内容产能与素材加工效率，经验可复制可复用
+    - who: 对 AI 工具与方法感兴趣的个人
+      gain: 沉淀一套自己的判断与动作
+posters:
+  - file: main-0-title
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: title
+        spec:
+          enLabel: AI AGENT SELF-EVOLUTION CAMP
+          eyebrow: AI 数智化实战课
+          title: |-
+            AI数智化系统
+            自我进化实战营
+          subtitle: |-
+            这是一堂 AI 智能体实操课
+            + 企业数智化系统自我进化体验课
+          stats:
+            - value: 10+节
+              label: Agent 实战课程
+            - value: 5大
+              label: 实操模块
+            - value: 2个
+              label: 智能体交付
+          badges:
+            - 人人可学
+            - 人人可用
+            - 人人能会
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-1-hero
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: AI 数智化实战课
+        title: |-
+          AI数智化系统
+          自我进化实战营
+        subtitle: |-
+          这是一堂 AI 智能体实操课
+          + 企业数智化系统自我进化体验课
+        badges:
+          - 10+节Agent智能体实战课程
+          - 直播咨询
+          - 作业模板
+          - 社群答疑
+      - kind: note
+        text: |-
+          五个模块，从装起来到用起来：
+          ① 安装配置与调试　② 提示词与需求模板　③ 自我进化体验
+          ④ 业务系统搭建　⑤ 效率工具落地
+          人人可学 · 人人可用 · 人人能会
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-2-modules
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: 课程内容
+        title: |-
+          五个模块
+          从装起来到用起来
+        subtitle: 每个模块都有对应作业模板，边做边沉淀
+      - kind: rows
+        items:
+          - label: M1
+            title: "{{content.modules.M1.title}}"
+            lines:
+              - 零基础装好智能体，完成环境配置与参数调试，跑通第一个可用的智能体。
+          - label: M2
+            title: "{{content.modules.M2.title}}"
+            lines:
+              - 拆解提示词结构，沉淀需求模板。
+              - 把零散信息整理成结构化需求，重复提问变成可复用资产。
+          - label: M3
+            title: "{{content.modules.M3.title}}"
+            lines:
+              - 体验系统自我进化机制，看懂反馈—调整—再验证的持续优化循环。
+          - label: M4
+            title: "{{content.modules.M4.title}}"
+            lines:
+              - 以公众号运营自动化系统为例，从零搭出「选题-写作-作图-排版-发布」全流程。
+          - label: M5
+            title: "{{content.modules.M5.title}}"
+            lines:
+              - 把智能体接进日常工具，沉淀可复用的操作方法。
+              - 流程复用：下一次直接调用，日常流程真正提效。
+      - kind: footer
+        text: 五步走完，从安装到业务系统落地
+  - file: main-3-audience
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: 适合谁
+        title: 这门课为谁而设
+        subtitle: 不需要你会写代码，但需要你愿意动手
+      - kind: cards
+        columns: 2
+        items: "{{content.audience}}"
+      - kind: note
+        text: |-
+          交付形式：10+ 节 Agent 智能体实战课程 + 直播咨询
+          作业模板 + 社群答疑。虚拟商品，报名后进班级群。
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-4-notice
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: 购买须知
+        title: 重要提醒
+        subtitle: |-
+          下单前请看这两条
+          先说清楚，再决定要不要买
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 虚拟商品
+            title: 购买后不支持退款
+            lines:
+              - 线上课程为虚拟商品
+              - 购买后不支持退款
+              - 可申请电子发票
+          - tag: 资料领取
+            title: 及时联系客服
+            lines:
+              - 购买后及时联系客服
+              - 领取学习流程和课程资料
+      - kind: note
+        text: |-
+          课程为线上课程 + 直播咨询，报名后进班级群。
+          咨询与售后：利姆斯科技 · 亿检链团队。
+      - kind: footer
+        text: 利姆斯科技 · 亿检链团队
+  - file: main-5-plain-light
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: plainLight
+    blocks:
+      - kind: title
+        spec:
+          enLabel: AI AGENT SELF-EVOLUTION CAMP
+          eyebrow: AI 数智化实战课
+          title: |-
+            AI数智化系统
+            自我进化实战营
+          subtitle: |-
+            这是一堂 AI 智能体实操课
+            + 企业数智化系统自我进化体验课
+          stats:
+            - value: 10+节
+              label: Agent 实战课程
+            - value: 5大
+              label: 实操模块
+            - value: 2个
+              label: 智能体交付
+          badges:
+            - 人人可学
+            - 人人可用
+            - 人人能会
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-6-plain-deep
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: plainDeep
+    blocks:
+      - kind: title
+        spec:
+          enLabel: AI AGENT SELF-EVOLUTION CAMP
+          eyebrow: AI 数智化实战课
+          title: |-
+            AI数智化系统
+            自我进化实战营
+          subtitle: |-
+            这是一堂 AI 智能体实操课
+            + 企业数智化系统自我进化体验课
+          stats:
+            - value: 10+节
+              label: Agent 实战课程
+            - value: 5大
+              label: 实操模块
+            - value: 2个
+              label: 智能体交付
+          badges:
+            - 人人可学
+            - 人人可用
+            - 人人能会
+      - kind: footer
+        text: "{{product.name}}"
+  - file: detail-1-modules
+    width: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: COURSE MODULES
+        title: 五个模块全景
+        subtitle: |-
+          从装起来，到用起来，再到让系统自己进化
+          每个模块都有对应作业模板
+      - kind: section
+        label: MODULE 01 — 05
+        title: 模块拆解
+        desc: 五个模块按顺序推进，前一个模块的产出就是后一个模块的输入。
+      - kind: timeline
+        items:
+          - time: "{{content.modules.M1.label}}"
+            title: "{{content.modules.M1.title}}"
+            lines:
+              - 零基础装好智能体：下载、安装、环境自检
+              - 账号与权限配置，把参数调到自己能用的状态
+              - 跑通第一个可用的智能体，并留下可复现的步骤
+          - time: "{{content.modules.M2.label}}"
+            title: "{{content.modules.M2.title}}"
+            lines:
+              - 拆解提示词结构：目标、上下文、约束、输出格式
+              - 沉淀需求模板，把重复提问变成可复用资产
+              - 现场把一个真实需求写成模板并跑一遍
+          - time: "{{content.modules.M3.label}}"
+            title: "{{content.modules.M3.title}}"
+            lines:
+              - 体验系统自我进化机制的实际运行过程
+              - 看懂反馈—调整—再验证的持续优化循环
+              - 把人工改一遍，变成系统自己迭代一轮
+          - time: "{{content.modules.M4.label}}"
+            title: "{{content.modules.M4.title}}"
+            lines:
+              - 以公众号运营自动化系统为例，从零搭一套出来
+              - 跑通「选题-写作-作图-排版-发布」全流程
+              - 讲清系统从搭建到优化的每一步操作方法
+          - time: "{{content.modules.M5.label}}"
+            title: "{{content.modules.M5.title}}"
+            lines:
+              - 把智能体接进日常工具链：文档、表格、消息
+              - 沉淀可复用的操作方法与流程
+              - 把课堂里的方法带回真实工作里
+      - kind: section
+        label: CASE · 公众号运营自动化系统
+        title: 业务系统搭建示例
+        desc: 从零演示用亿检智能体搭建「选题-写作-作图-排版-发布」全流程，并讲解系统从搭建到优化的全流程操作方法。
+      - kind: rows
+        items:
+          - label: 选题
+            title: 把选题变成可排期的清单
+            lines:
+              - 固定采集维度，输出可排期的选题表
+          - label: 写作
+            title: 用需求模板生成可改的初稿
+            lines:
+              - 提示词模板 + 素材清单，输出结构化初稿
+          - label: 作图
+            title: 配图与封面一次产出一组
+            lines:
+              - 固定版式与尺寸，批量产出素材
+          - label: 排版
+            title: 套用版式模板出图文
+            lines:
+              - 固定排版规则，输出可直接预览的图文
+          - label: 发布
+            title: 按排期发布并回收数据
+            lines:
+              - 发布数据回流，用于下一轮提示词与模板优化
+      - kind: note
+        text: |-
+          每一步都有验收标准：跑得通、看得见、可以照着再做一遍。
+          课程交付的是方法与模板，不是现成答案。
+      - kind: footer
+        text: "{{product.name}}"
+  - file: detail-2-author-audience
+    width: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: ABOUT · FOR WHO
+        title: 谁来讲，讲给谁听
+        subtitle: |-
+          把踩过的坑讲成能照着做的步骤
+          只讲工具怎么用、系统怎么搭，不做任何效果承诺
+      - kind: profile
+        profile:
+          avatar: "{{author.avatar}}"
+          name: "{{author.name}}"
+          role: "{{author.role}}"
+          bullets: "{{author.bullets}}"
+      - kind: note
+        text: 长期做需求文档与产品实践，把亿检智能体用进真实业务，带队跑通企业服务与内容生产两条线。不讲行业大词，只讲你回去第一步该做什么。
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 他做过
+            title: 真实业务落地
+            lines:
+              - 把智能体装进企业流程
+              - 也装进内容生产流程
+          - tag: 他讲得
+            title: 能照做的步骤
+            lines:
+              - 不讲趋势，讲动作
+              - 每一步都有验收标准
+      - kind: section
+        label: 目标客户
+        title: 谁适合来，谁不必来
+        desc: 这门课解决的是「用了没用起来」的问题，不是「要不要用 AI」的问题。
+      - kind: cards
+        columns: 2
+        items: "{{content.targets}}"
+      - kind: note
+        text: 不必来：只想要资料包不愿听课的人；期待立竿见影的人；完全不想动手配置的人。
+      - kind: rows
+        title: 常见问题
+        items: "{{content.faq}}"
+      - kind: note
+        text: 我们给你五项能力：可检测 · 可决策 · 可执行 · 可追溯 · 可信任。也要你三件投入：引进 · 重视 · 投入。五项能力 × 你的三件投入 = 你的业务确定性。
+      - kind: footer
+        text: "{{product.name}}"
+  - file: detail-3-author
+    width: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: INSTRUCTOR · 讲师
+        title: 谁来讲这门课
+        subtitle: |-
+          做过、踩过、写成步骤
+          不讲行业大词，只讲你回去第一步该做什么
+      - kind: profile
+        profile:
+          avatar: "{{author.avatar}}"
+          name: "{{author.name}}"
+          role: "{{author.role}}"
+          bullets: "{{author.bullets}}"
+      - kind: note
+        text: 长期做需求文档与产品实践，把亿检智能体用进真实业务，带队跑通企业服务与内容生产两条线。
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 他做过
+            title: 真实业务落地
+            lines:
+              - 把智能体装进企业流程
+              - 也装进内容生产流程
+          - tag: 他讲得
+            title: 能照做的步骤
+            lines:
+              - 不讲趋势，讲动作
+              - 每一步都有验收标准
+      - kind: footer
+        text: "{{product.name}}"
+copy:
+  fileName: 商品文案.md
+  blocks:
+    - type: heading
+      level: 1
+      text: "{{product.name}}"
+    - type: fields
+      fields:
+        - label: 商品名称
+          value: "{{product.name}}"
+        - label: 商品属性
+          value: "{{product.category}}"
+        - label: 售价
+          value: 以商品后台设置为准（图与文案均不写死价格）
+        - label: 品牌
+          value: "{{product.brand}}"
+        - label: 交付形式
+          value: 10+ 节 Agent 智能体实战课程 + 直播咨询 + 作业模板 + 社群答疑
+        - label: 赠品
+          value: "{{product.gifts}}"
+        - label: 课程定位
+          value: "{{product.position}}"
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程性质说明
+    - type: raw
+      text: |-
+        这是一堂 **AI 智能体实操课 + 企业数智化系统自我进化体验课**。
+
+        课程内容覆盖：智能体安装配置与调试、提示词与需求模板、系统自我进化机制体验、业务系统搭建、效率工具落地。
+
+        课程**只讲技术能力与工具用法**，**不做任何效果承诺**。课程性质是企业数智化能力建设培训，**不涉及任何形式的经营活动内容**。给你的是方法、工具和可以照着做的步骤，能应用到什么程度，由你自己练出来。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 一句话说明
+    - type: raw
+      text: |-
+        10+ 节 Agent 智能体实战课程：从装好第一个智能体，到用亿检智能体搭出一套会自我进化的数智化系统。
+
+        不讲概念，只讲你回去要做的第一步。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程简介
+    - type: raw
+      text: |-
+        这不是一堂讲概念的课。
+
+        10+ 节课程，我们陪你把「亿检智能体」装进电脑、接进业务、跑通一次完整流程：
+        从第一个模块的手把手安装，到业务系统搭建（以公众号运营自动化系统为例的完整演示），
+        再到把方法接回日常工具。
+
+        学完你带走的不是一个软件，而是一套**可复用、会自我进化的数智化系统**，和一份能继续用下去的能力沉淀清单。
+
+        课程主线沿着{{brand.text}}的 LIMS 成功公式展开：**L 检测 · I 决策 · M 执行 · S 追溯**，再乘上一个 AI 自治。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程内容（五个模块）
+    - type: heading
+      level: 3
+      text: M1｜智能体安装配置与调试
+    - type: raw
+      text: 零基础装好智能体，完成环境配置与参数调试，跑通第一个可用的智能体。
+    - type: heading
+      level: 3
+      text: M2｜提示词与需求模板
+    - type: raw
+      text: 拆解提示词结构，沉淀需求模板。把零散信息整理成结构化需求，重复提问变成可复用资产。
+    - type: heading
+      level: 3
+      text: M3｜系统自我进化机制体验
+    - type: raw
+      text: 体验系统自我进化机制，看懂反馈—调整—再验证的持续优化循环。
+    - type: heading
+      level: 3
+      text: M4｜业务系统搭建
+    - type: raw
+      text: 以公众号运营自动化系统为例，从零搭出「选题-写作-作图-排版-发布」全流程。
+    - type: heading
+      level: 3
+      text: M5｜效率工具落地
+    - type: raw
+      text: 把智能体接进日常工具，沉淀可复用的操作方法。流程复用：下一次直接调用，日常流程真正提效。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 业务系统搭建示例：公众号运营自动化系统
+    - type: raw
+      text: |-
+        模块四以**公众号运营自动化系统**为例，从零演示用亿检智能体搭建「选题-写作-作图-排版-发布」全流程，
+        并讲解系统从搭建到优化的全流程操作方法。
+
+        - **选题**：把选题变成可排期的清单——固定采集维度，输出可排期的选题表
+        - **写作**：用需求模板生成可改的初稿——提示词模板 + 素材清单，输出结构化初稿
+        - **作图**：配图与封面一次产出一组——固定版式与尺寸，批量产出素材
+        - **排版**：套用版式模板出图文——固定排版规则，输出可直接预览的图文
+        - **发布**：按排期发布并回收数据——发布数据回流，用于下一轮提示词与模板优化
+    - type: hr
+    - type: heading
+      level: 2
+      text: 上课流程
+    - type: raw
+      text: |-
+        **课前**　下单成功 → 收到【{{brand.text}}】开头的短信 → 按说明进班级群，完成环境自检
+
+        **课中**　10+ 节 Agent 智能体实战课程，按模块顺序推进；直播咨询集中答疑，现场拆解真实业务
+
+        **课后**　作业模板包 + 社群答疑 + 新功能演示
+
+        > 所有付费客户均可参加直播咨询（常见问题集中解答 + 新功能演示）。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 目标客户
+    - type: targetTable
+    - type: raw
+      text: "**不适合**：只想要资料包不愿听课的人；期待立竿见影的人；完全不想动手配置的人。"
+    - type: hr
+    - type: heading
+      level: 2
+      text: 作者介绍
+    - type: raw
+      text: |-
+        **{{author.name}} · {{author.role}}**
+
+        - {{brand.text}}平台联合创始人
+        - 《Node.js 区块链开发》《Web3.0 数字化实战》作者
+        - 200+ 企业客户咨询高级顾问
+        - 军工、政府、企业等重磅案例
+
+        长期做需求文档与产品实践，把亿检智能体用进真实业务，带队跑通企业服务与内容生产两条线。
+
+        本课程由他主讲。不讲行业大词，只讲你回去第一步该做什么——把踩过的坑讲成可以照着做的步骤。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 你会带走什么
+    - type: raw
+      text: |-
+        1. 装好并用起来的亿检智能体实例
+        2. 1 个社群，1 套软件，2 个智能体
+        3. 一套可复用、会自我进化的数智化系统
+        4. 一份可继续执行的行动清单
+    - type: hr
+    - type: heading
+      level: 2
+      text: 常见问题
+    - type: raw
+      text: |-
+        **Q1：上课需要准备什么？**
+        一台电脑。安装包与环境自检清单课前发放。
+
+        **Q2：10+ 节课程怎么安排？**
+        按五个模块顺序推进，每个模块都有对应的作业模板，边做边沉淀。
+
+        **Q3：直播咨询怎么参加？**
+        报名后进班级群，群内通知直播时间与答疑安排。
+
+        **Q4：没有技术背景能跟上吗？**
+        能。第一个模块从下载安装开始手把手带你做，边做边形成技能积累。
+
+        **Q5：课程会包含什么？**
+        方法、工具与作业模板（含提示词模板与项目搭建清单）；能应用到什么程度，是你自己练出来的。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 重要提醒
+    - type: raw
+      text: |-
+        线上课程为虚拟商品，购买后不支持退款，可申请电子发票。
+
+        线上课程服务购买后，及时联系客服，领取学习流程和课程资料。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 服务与售后
+    - type: raw
+      text: |-
+        - 退款按视频号小店平台规则执行
+        - 课程咨询与售后由利姆斯科技 · {{brand.text}}团队提供
+    - type: hr
+    - type: heading
+      level: 2
+      text: 品牌背景
+    - type: raw
+      text: |-
+        **{{brand.text}} = 亿 + 检 + 链**　亿是规模，检是看见和验证，链是连接和追溯。
+
+        用 AI 和数据，让企业的每一项关键业务都**可检测、可决策、可执行、可追溯**，在人工智能大潮里成为 AI Native。
+
+        在检测行业，{{brand.text}} LIMS 已服务 300+ 家实验室，单份报告交付周期从 72 小时缩短到 18 小时（72%↓），记录差错率下降 92%。
+
+        **利姆斯科技 · {{brand.text}}团队**
+    - type: hr
+    - type: heading
+      level: 2
+      text: 配图清单
+    - type: raw
+      text: |-
+        | 文件 | 尺寸 | 用途 |
+        | --- | --- | --- |
+        | `main-0-title.png` | 1080×1080 | 课程标题封面（大字报） |
+        | `main-1-hero.png` | 1080×1080 | 商品首图（主视觉） |
+        | `main-2-modules.png` | 1080×1080 | 五个实操模块 |
+        | `main-3-audience.png` | 1080×1080 | 适合谁 + 交付形式 |
+        | `main-4-notice.png` | 1080×1080 | 重要提醒（虚拟商品说明） |
+        | `main-5-plain-light.png` | 1080×1080 | 纯色底图（浅底）——礼物/推荐场景 |
+        | `main-6-plain-deep.png` | 1080×1080 | 纯色底图（深底）——礼物/推荐场景 |
+        | `detail-1-modules.png` | 1080×长图 | 核心内容：五模块 + 业务系统搭建示例 |
+        | `detail-2-author-audience.png` | 1080×长图 | 核心内容：作者介绍 + 目标客户 + 常见问题 |
+        | `detail-3-author.png` | 1080×长图 | 讲师专页：头像名片 + 资历 + 授课方式 |
+    - type: hr
+    - type: raw
+      text: <!-- ↓↓↓ 以下为内部运营备注，复制到商品详情页时不要带上 ↓↓↓ -->
+    - type: heading
+      level: 2
+      text: 运营备注（不对外展示）
+    - type: raw
+      text: |-
+        1. **为什么有 V7**：V2《AI赚钱系统自我进化训练营》被判定为「涉及【AI盈利课程】，平台暂未开放售卖」；V3 按纯技术口径重写并通过自查；V4 把课程名改为「{{product.name}}」（平台反馈「工作流」已过时）并换成经典蓝；V7 保留合规文案口径，把交付形式改为「10+ 节课程 + 直播咨询 + 作业模板 + 社群答疑」，结构改为五个模块，视觉换成清新绿有机底，并启用「Logo + {{brand.text}}」右上角品牌位。
+        2. **平台合规口径**：视频号小店 / 视频号与抖音尚品对「教育培训」类目都禁止教授使用 AI 开展商业活动或营利的课程（如赚钱、变现、获客、副业、涨粉、带货等）；允许纯技术类（工具操作、技术原理、提示词、代码开发、系统搭建）。因此本版本全文不出现任何效果承诺与经营导向表述，只讲工具怎么用、系统怎么搭。**具体条款编号与判定口径以两个平台后台最新规则为准，上架前需人工核对一次。**
+        3. **风险点与备用案例**：模块四使用「公众号运营自动化系统」作演示案例，语汇锁定在「选题-写作-作图-排版-发布」的技术流程，不含任何流量、转化类表述。若平台机审仍对「运营」二字敏感，备用案例：①「企业内部内容生产系统」　②「工单与售后协同系统」，替换时只需改模块四文案与长图对应模块，海报其余部分不受影响。
+        4. **类目建议**：优先选技术类目（人工智能 / 软件技术 / IT 技能），**不要**选副业、创业、营销、电商等盈利导向类目。商品属性填「虚拟商品 · 数字课程（技术实战）」。
+        5. **上架前必检**：官方禁用词库已内置在 `scripts/check-listing-compliance.ts`（含直接禁用词、间接话术、关联高危词三类），一条命令跑完全量扫描，出现即删：
+           `bun run scripts/check-listing-compliance.ts v7`
+        6. **不要自行加价宣传**：图中与文案均不写死售价，价格在商品后台设置；也不要把「效果承诺」「回本」「多久见效」写进详情页。
+        7. **域名**：官网地址已从图中移除，需要时再补。
+        8. **图片**：封面大字报用 `main-0-title.png`，主图第 1 张用 `main-1-hero.png`；详情页建议按「主视觉 → 五个模块 → 适合谁 → 重要提醒 → 模块详解 → 作者与 FAQ」顺序铺排；需要单独介绍讲师时用 `detail-3-author.png`（讲师专页，与长图里的头像名片同源）。
+        9. **纯色底图（重要）**：视频号小店在「送礼/推荐」等场景要用纯色底图，平台自带的 AI 编辑工具会把深底海报抠成“主体+白底”，白字直接消失、字变虚影，**不可用**。已改用本地重排的两张：
+           - `main-5-plain-light.png`：浅底平涂（清新绿方案下为纯白底，文字全部深色系）
+           - `main-6-plain-deep.png`：深底平涂（清新绿方案下为纯绿底，保留品牌色，主体对比更硬）
+           两张都是 1080×1080、无渐变无纹理无暗角的平涂底，元素与 `main-0-title.png` 完全一致，可直接上传。
+        10. **配色方案**：三套方案已参数化（暖色琥珀 / 经典商务蓝 / 清新绿），生成时用 `--theme` 选择，默认清新绿：
+           `bun run scripts/gen-shop-listing-v7.ts --theme fresh`
+           换方案时，`main-5-plain-light` / `main-6-plain-deep` 会自动换成对应方案的浅底 / 深底纯色图；加 `--out` 可换输出目录，避免覆盖当前交付：
+           `bun run scripts/gen-shop-listing-v7.ts --theme blue --out ./outputs/shop-listing-v7-blue`
+        11. **品牌位**：右上角统一「Logo + {{brand.text}}」（白色圆角 chip 承托），只有 `main-4-notice.png` 保留「利姆斯科技 · {{brand.text}}团队」全称。
+        12. **作者**：署名已确认为「{{author.name}} · {{author.role}}」，头像使用 `assets/shop-listing/author-avatar.png`；换人需同步替换长图与详情文案。

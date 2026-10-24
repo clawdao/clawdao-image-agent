@@ -89,4 +89,68 @@ describe('text-overlay', () => {
     expect(result.buffer.length).toBeGreaterThan(1000);
     expect(result.buffer.equals(input)).toBe(false);
   });
+
+  it('keeps "ClawDao" intact instead of splitting it into Cla/wDao', () => {
+    const svg = buildTextOverlaySvg(
+      'top_banner',
+      { title: '你出想法，ClawDao帮你实现' },
+      1920,
+      320,
+      'black_gold',
+    );
+    // 整个标题作为一个 tspan 渲染，英文单词不被拆开
+    expect(svg).toContain('你出想法，ClawDao帮你实现');
+    expect(svg).not.toMatch(/>Cla</);
+    expect(svg).not.toMatch(/>wDao</);
+    expect(svg).not.toMatch(/>Claw</);
+  });
+
+  it('renders the title as layered metallic art (gradient + shine + extrude + glow)', () => {
+    const svg = buildTextOverlaySvg(
+      'top_banner',
+      { title: '你出想法，ClawDao帮你实现' },
+      1920,
+      320,
+      'black_gold',
+    );
+    expect(svg).toContain('titleGradient'); // 多段金属渐变
+    expect(svg).toContain('titleShine');    // 顶部高光层
+    expect(svg).toContain('titleGlow');     // 外发光滤镜
+    expect(svg).toContain('<clipPath');     // 高光裁切
+    // 立体挤出层：同一标题被多次绘制
+    const titleRenders = svg.match(/你出想法，ClawDao帮你实现/g) ?? [];
+    expect(titleRenders.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('center layout renders light band + subtitle + bottom deco lines', () => {
+    const svg = buildTextOverlaySvg(
+      'top_banner',
+      { title: '你出想法 我给结果', subtitle: '企业老板 | 实体商家' },
+      1920,
+      320,
+      'black_gold',
+      'center',
+    );
+    expect(svg).toContain('url(#lightBand)');  // 标题下水平光带
+    expect(svg).toContain('url(#bandCore)');   // 光带中央白亮核心
+    expect(svg).toContain('url(#topWarmGlow)');// 顶部暖金光晕
+    expect(svg).toContain('url(#cornerShade)');// 右上角压暗
+    expect(svg).toContain('企业老板 | 实体商家');
+    expect(svg).toContain('letter-spacing');   // 副标题字间距
+    // 底部三段装饰线
+    expect((svg.match(/<rect /g) ?? []).length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('center layout without subtitle omits the subtitle text', () => {
+    const svg = buildTextOverlaySvg(
+      'top_banner',
+      { title: '你出想法 我给结果' },
+      1920,
+      320,
+      'black_gold',
+      'center',
+    );
+    expect(svg).not.toContain('letter-spacing');
+    expect(svg).toContain('你出想法 我给结果');
+  });
 });

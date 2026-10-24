@@ -12,8 +12,6 @@
  * 失败重试：指数退避，最多 3 次
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
 import { normalizeImageReference } from './image-source';
 import { getPreset } from './presets';
 
@@ -21,6 +19,37 @@ import { getPreset } from './presets';
 export type AspectRatio =
   | '1:1' | '3:2' | '2:3' | '3:4' | '4:3'
   | '16:9' | '9:16' | '21:9' | '5:4';
+
+/**
+ * MiniMax 图像接口实际支持的比例白名单。
+ *
+ * 重要：不在白名单里的比例（如 5:4）**不会被报错**，接口会静默返回别的比例
+ * （实测 5:4 回来的是 720×1280 的 9:16），导致成品构图完全跑偏。
+ * 所以请求前先快照到最接近的支持比例。
+ */
+export const SUPPORTED_ASPECT_RATIOS = [
+  '1:1', '16:9', '4:3', '3:2', '2:3', '3:4', '9:16', '21:9',
+] as const;
+
+/** 把比例快照到接口支持的比例（取宽高比数值最接近的一个） */
+export function snapAspectRatio(ratio: AspectRatio): string {
+  if ((SUPPORTED_ASPECT_RATIOS as readonly string[]).includes(ratio)) return ratio;
+  const parse = (r: string): number => {
+    const [a, b] = r.split(':').map(Number);
+    return a / b;
+  };
+  const target = parse(ratio);
+  let best = SUPPORTED_ASPECT_RATIOS[0] as string;
+  let bestDiff = Infinity;
+  for (const candidate of SUPPORTED_ASPECT_RATIOS) {
+    const diff = Math.abs(parse(candidate) - target);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      best = candidate;
+    }
+  }
+  return best;
+}
 
 export interface ImageGenerationOptions {
   prompt: string;
@@ -45,7 +74,7 @@ export interface ImageGenerationResult {
 export interface ImageGeneratorConfig {
   apiKey: string;
   baseUrl?: string;                  // 默认 https://api.minimaxi.com
-  outputDir?: string;                 // 默认 ./outputs
+  outputDir?: string;                 // 已弃用：本模块不再写盘，由 task-manager 统一负责
   fetchImpl?: typeof fetch;          // 便于测试注入
 }
 
@@ -56,13 +85,43 @@ const DEFAULTS = {
   n: 1,
   responseFormat: 'base64' as 'url' | 'base64',
   outputDir: './outputs',
+  // 注意：DEFAULTS.outputDir 仅为向后兼容保留，generateImage 不再读它
   retries: 3,
 };
 
 const MAX_N = 5;  // image-01 一次最多 5 张
 const MAX_PROMPT_LENGTH = 1490; // API 要求严格小于 1500，预留少量安全余量
-const TEXT_FREE_CONSTRAINT = `
+
+const BASE64_BODY_RE = /^[A-Za-z0-9+/]+={0,2}$/;
+
+/** 判断一个字符串是否像真正的图像 base64（而不是被误传进来的 URL / 占位符）。 */
+function looksLikeImageBase64(value: string): boolean {
+  const body = value.replace(/\s/g, '');
+  // 真实图片 base64 远长于此；短字符串必然不是有效图像
+  if (body.length < 64) return false;
+  if (!BASE64_BODY_RE.test(body)) return false;
+  // 解码后必须是可识别的图像魔数（JPEG / PNG）
+  const bytes = Buffer.from(body.slice(0, 16), 'base64');
+  const isJpeg = bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  const isPng =
+    bytes.length >= 8 &&
+    bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+  return isJpeg || isPng;
+}
+export const TEXT_FREE_CONSTRAINT = `
 【文字安全区（硬性约束）】画面中不要生成任何文字、字母、数字、Logo、水印、签名、书本封面字、UI 文案或伪文字。不要生成带标签的包装盒、电脑、手机、屏幕、书本、海报、招牌、霓虹字或二维码；不要在画面角落添加小字、免责声明、标签条、卡片、按钮、面板或类似文字的纹理；如场景必须有容器或电子设备，只能使用纯色无标识表面，屏幕关闭或显示纯色。所有文案均由后期本地排版层精确叠加，请保持预留区域为干净背景；参考图仅参考风格，不复制参考图中的文字。`;
+
+export const NO_LIVE_SUBJECT_CONSTRAINT = `
+【画面主体（硬性约束）】本图只生成纯背景，绝对不要出现任何角色、动物、生物、吉祥物、人物、产品或实体物体（包括写实或卡通的龙虾、螃蟹、章鱼、鱼类、拟人形象）。所有主体形象均由后期本地合成层精确贴入，你只负责背景、构图与光效。`;
+
+/**
+ * 分类专属的硬性约束。
+ * top_banner 的 IP 由 banner-compositor 本地贴入（21:9 宽幅里模型必然把 IP 画成大特写并压住标题区），
+ * 所以背景必须是纯底图，否则会出现两套 IP 打架。
+ */
+const CATEGORY_CONSTRAINTS: Partial<Record<SmartImageOptions['category'], string>> = {
+  top_banner: NO_LIVE_SUBJECT_CONSTRAINT,
+};
 
 function compactVisualDNA(dna: VisualDNA): string {
   const text = (value: unknown, max = 80) =>
@@ -116,7 +175,6 @@ export async function generateImage(
   const {
     apiKey,
     baseUrl = 'https://api.minimaxi.com',
-    outputDir = DEFAULTS.outputDir,
     fetchImpl = fetch,
   } = config;
 
@@ -127,7 +185,7 @@ export async function generateImage(
   const payload: Record<string, unknown> = {
     model,
     prompt,
-    aspect_ratio: aspectRatio,
+    aspect_ratio: snapAspectRatio(aspectRatio),
     n: safeN,
     response_format: responseFormat,
   };
@@ -197,16 +255,30 @@ export async function generateImage(
         throw err;
       }
 
-      // 可选：保存到 outputDir（用 ts+idx 命名，与 task-manager 写入逻辑对齐）
-      if (outputDir && responseFormat === 'base64') {
-        const ts = Date.now();
-        for (let i = 0; i < images.length; i++) {
-          const file = join(outputDir, `cover_${ts}_${i}.jpeg`);
-          mkdirSync(dirname(file), {recursive: true});
-          writeFileSync(file, Buffer.from(images[i], 'base64'));
+      // 关键防御：response_format=base64 时必须拿到真正的图像字节。
+      // MiniMax 的返回字段在不同版本间会漂移（image_base64 / image_url / image_urls），
+      // 一旦命中 URL 分支，Buffer.from(url, 'base64') 会静默产出垃圾字节而不是抛错，
+      // 历史上正是这样在 outputs/ 里留下了 200+ 个 0~3 字节的坏图。
+      if (responseFormat === 'base64') {
+        for (const image of images) {
+          if (typeof image !== 'string' || !image) {
+            const err: Error & { fatal?: boolean } = new Error('MiniMax 返回了非字符串图像数据');
+            err.fatal = true;
+            throw err;
+          }
+          if (!looksLikeImageBase64(image)) {
+            const err: Error & { fatal?: boolean } = new Error(
+              `MiniMax 返回的图像不是有效 base64（疑似 URL 字段）：${image.slice(0, 80)}`
+            );
+            err.fatal = true;
+            throw err;
+          }
         }
       }
-      return { images, format: responseFormat, base64: images };
+
+      // 注意：本函数**不落盘**。写文件是 task-manager 的职责（它负责分类命名、
+      // 文字叠加层与变体索引），在此重复写盘只会产生无人引用的孤儿 cover_*.jpeg。
+      return { images, format: responseFormat, base64: responseFormat === 'base64' ? images : undefined };
     } catch (e) {
       const err = e as Error & { fatal?: boolean };
       if ((err as any).fatal || (err as any).code) {
@@ -237,6 +309,8 @@ export interface SmartImageOptions {
   brandContext?: BrandContext;
   dna?: VisualDNA;                                // 已分析好的视觉 DNA
   scene?: string;                                  // 场景库 key（livestream/product_launch/holiday/recruiting）
+  /** 自定义场景提示词（覆盖场景库前缀，用于一次性素材定制） */
+  scenePromptOverride?: string;
   /** v0.2: 变体数量（默认 1） */
   variantCount?: number;
   config: ImageGeneratorConfig;
@@ -278,6 +352,7 @@ export async function smartGenerate(
     brandContext,
     dna,
     scene,
+    scenePromptOverride,
     variantCount = 1,
     config,
   } = options;
@@ -285,7 +360,9 @@ export async function smartGenerate(
   // 场景注入：scene_prompt 模板变量由 scenes.ts 提供
   let scenePromptBlock = '';
   let occasionPrompt = '';
-  if (scene) {
+  if (scenePromptOverride?.trim()) {
+    scenePromptBlock = scenePromptOverride.trim();
+  } else if (scene) {
     const {getScene, sceneToPromptPrefix, resolveOccasionContext} = await import('./scenes');
     const sceneObj = getScene(scene);
     occasionPrompt = scene === 'holiday' ? resolveOccasionContext(theme) : '';
@@ -320,7 +397,10 @@ export async function smartGenerate(
   }
 
   // 关键约束放最前面，确保超长提示词被压缩时不会丢失“无字”和节庆主题覆盖。
-  promptText = limitImagePrompt([TEXT_FREE_CONSTRAINT, occasionPrompt, promptText].filter(Boolean).join('\n\n'));
+  const categoryConstraint = CATEGORY_CONSTRAINTS[category] ?? '';
+  promptText = limitImagePrompt(
+    [TEXT_FREE_CONSTRAINT, categoryConstraint, occasionPrompt, promptText].filter(Boolean).join('\n\n'),
+  );
 
   // 图生图：把 refImages 转换成 subject_reference
   let subjectReference: ImageGenerationOptions['subjectReference'];

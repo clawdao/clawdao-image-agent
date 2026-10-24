@@ -63,6 +63,10 @@ export interface Task {
   refImages: string[];
   theme: ThemeConfig;
   ratio: AspectRatio;
+  /** 业务场景 key（livestream/product_launch/holiday/recruiting） */
+  scene?: SceneKey;
+  /** 用户手写提示词（覆盖模板） */
+  customPrompt?: string;
   /** v0.2: 本次任务的变体配置（默认 count=1） */
   variantConfig?: VariantConfig;
   status: TaskStatus;

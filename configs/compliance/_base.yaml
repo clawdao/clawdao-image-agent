@@ -1,0 +1,118 @@
+# 合规规则基线（所有版本共用）
+#
+# 平台口径：视频号小店 / 视频号与抖音尚品的「教育培训」类目都禁止教授使用 AI
+# 开展商业活动或营利的课程；允许纯技术类（工具操作、技术原理、提示词、代码开发、
+# 模型与系统搭建）。具体条款编号与判定口径以两个平台后台最新规则为准，上架前人工核对。
+#
+# 版本配置（configs/compliance/v*.yaml）用 `extends` 继承本文件，再覆盖差异项。
+
+forbidden:
+  # ── 直接禁用词（官方明示）──────────────────────────────
+  direct:
+    - 赚钱
+    - 变现
+    - 副业
+    - 增收
+    - 接单
+    - 获客
+    - 爆单
+    - 引流
+    - 月入
+    - 躺赚
+    - 轻资产
+    - 商机
+    - 利润
+    - 收益
+    - 保底
+    - 稳赚
+    - 项目红利
+
+  # ── 间接话术（换皮表达）────────────────────────────────
+  indirect:
+    - 轻松带来收入
+    - 放大收入
+    - 打造第二收入曲线
+    - 第二收入曲线
+    - 商业闭环
+    - 私域成交
+    - 客户转化
+
+  # ── 关联高危词（本身不在官方词表，但极易触发人工复核）──
+  risky:
+    - 营业额
+    - 收入
+    - 盈利
+    - 暴富
+    - 暴赚
+    - 回本
+    - 月赚
+    - 日赚
+    - 年入
+    - 日入
+    - 销冠
+    - 业绩翻倍
+    - 财富自由
+    - AI 创业
+    - AI创业
+    - AI 变现
+    - AI变现
+    - AI 赚钱
+    - AI赚钱
+    - 赚钱系统
+    - 赚钱课
+    - 致富
+    - 分佣
+    - 分销招募
+    - 代理招募
+    - 裂变
+    - 砍价
+
+  # ── 英文高危词（英文标题 / 副标题同样会被机审）───────────
+  english:
+    - monetiz
+    - revenue
+    - profit
+    - make money
+    - make-money
+    - earning
+    - cash
+    - wealth
+    - rich
+    - side hustle
+    - sidehustle
+
+  # ── 平台高危词（直播带货语境下的强信号）──────────────────
+  platform:
+    - 带货
+    - 涨粉
+    - 打赏
+    - 付费转化
+    - 返佣
+    - 佣金
+    - 分销
+    - 招商
+    - 加盟
+    - 私域
+    - 收割
+
+# ── 断言开关（版本配置可覆盖）────────────────────────────
+assertions:
+  # 品牌位：右上角统一「Logo + 品牌名」，全称只允许出现在指定页
+  brandSlot:
+    enabled: false
+    fullBrandOnlyOn: []
+  # 标题结构：商品名 = 主标题常量（单段），修饰词在封面主标题上方
+  title:
+    enabled: false
+    modifierVar: titleModifier
+    mainVar: titleMain
+    coverFiles: []
+    forbidShortCycleInName: false
+    deliveryMustInclude: []
+    copyMustInclude: []
+    copyMustNotInclude: []
+    footerAllowlist: []
+    staleTitles: []
+
+# ── 内部运营备注分隔标记（该标记之后的内容不对外展示，不参与扫描）──
+internalMarker: "## 运营备注"

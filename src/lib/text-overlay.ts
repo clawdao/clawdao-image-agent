@@ -17,6 +17,12 @@ export interface TextOverlayOptions {
   category: Category;
   theme: ThemeConfig & { title: string };
   colorTone?: ColorTone;
+  /**
+   * 排版布局：
+   * - left（默认）：标题靠左，预留右侧放 IP（顶/中广告条）
+   * - center：标题居中，标题下方一条水平光带 + 副标题 + 底部装饰线（黑金商务 banner）
+   */
+  layout?: 'left' | 'center';
 }
 
 export interface TextOverlayResult {
@@ -26,10 +32,13 @@ export interface TextOverlayResult {
 }
 
 interface ThemePalette {
-  titleFrom: string;
-  titleMid: string;
-  titleTo: string;
+  /** 标题金属渐变色带（自上而下） */
+  metal: string[];
   titleStroke: string;
+  /** 3D 挤出层颜色 */
+  extrude: string;
+  /** 标题外发光颜色 */
+  glow: string;
   accent: string;
   accentSoft: string;
 }
@@ -47,22 +56,28 @@ interface TextElementOptions {
   family?: string;
   opacity?: number;
   filter?: boolean;
+  /** SVG 滤镜 id，默认 textShadow */
+  filterId?: string;
+  /** 裁剪路径 id（用于金属高光层只落在字形内） */
+  clipPath?: string;
+  /** 字间距（px） */
+  letterSpacing?: number;
 }
 
 const PALETTES: Record<ColorTone, ThemePalette> = {
   black_gold: {
-    titleFrom: '#FFF7C2',
-    titleMid: '#FFD54A',
-    titleTo: '#B9790C',
+    metal: ['#FFFBE8', '#FFE49A', '#EFB024', '#7A4A03', '#C98C10', '#FFD96B', '#FFF4CC'],
     titleStroke: '#2A1600',
+    extrude: '#4A2A05',
+    glow: '#FFC24A',
     accent: '#F5C542',
     accentSoft: '#FFE9A3',
   },
   blue_purple: {
-    titleFrom: '#FFFFFF',
-    titleMid: '#BFD6FF',
-    titleTo: '#A78BFA',
+    metal: ['#FFFFFF', '#EAF1FF', '#C3D6FF', '#6D5FD0', '#A78BFA', '#DDE6FF', '#FFFFFF'],
     titleStroke: '#111827',
+    extrude: '#2A2350',
+    glow: '#A78BFA',
     accent: '#AFC8FF',
     accentSoft: '#E8EEFF',
   },
@@ -88,44 +103,82 @@ function textUnits(value: string): number {
   return units;
 }
 
+/**
+ * 文本原子单元：中文逐字、英文/数字成词。
+ * 英文单词不可在词内断行，避免出现 "Cla / wDao" 这类断裂。
+ */
+interface TextToken {
+  text: string;
+  units: number;
+}
+
+const LATIN_WORD_RE = /[A-Za-z0-9._'&+\-]/;
+
+function tokenize(value: string): TextToken[] {
+  const tokens: TextToken[] = [];
+  let index = 0;
+  while (index < value.length) {
+    const char = value[index];
+    if (/\s/.test(char)) {
+      tokens.push({ text: char, units: textUnits(char) });
+      index += 1;
+      continue;
+    }
+    if (/[\u2e80-\u9fff\uff00-\uffef]/.test(char)) {
+      tokens.push({ text: char, units: 1 });
+      index += 1;
+      continue;
+    }
+    if (LATIN_WORD_RE.test(char)) {
+      let end = index;
+      while (end < value.length && LATIN_WORD_RE.test(value[end])) end += 1;
+      const word = value.slice(index, end);
+      tokens.push({ text: word, units: textUnits(word) });
+      index = end;
+      continue;
+    }
+    tokens.push({ text: char, units: textUnits(char) });
+    index += 1;
+  }
+  return tokens;
+}
+
 function wrapText(value: string, maxUnits: number, maxLines: number): string[] {
   const text = String(value ?? '').replace(/\s+/g, ' ').trim();
   if (!text) return [];
 
+  const tokens = tokenize(text);
   const lines: string[] = [];
   let line = '';
   let lineUnits = 0;
 
-  for (let index = 0; index < text.length; index++) {
-    const char = text[index];
-    const charUnits = textUnits(char);
-    if (line && lineUnits + charUnits > maxUnits) {
+  /** 剩余部分塞进最后一行；放不下则截断并加省略号 */
+  const pushRemainder = (from: number): string[] => {
+    const rest = tokens.slice(from).map((token) => token.text).join('').trim();
+    if (textUnits(rest) <= maxUnits) return [rest];
+    let clipped = '';
+    let clippedUnits = 0;
+    for (const token of tokens.slice(from)) {
+      if (clippedUnits + token.units > Math.max(1, maxUnits - 1)) break;
+      clipped += token.text;
+      clippedUnits += token.units;
+    }
+    return [`${clipped.trimEnd()}…`];
+  };
+
+  for (let index = 0; index < tokens.length; index++) {
+    const token = tokens[index];
+    if (line && lineUnits + token.units > maxUnits) {
       lines.push(line.trimEnd());
       line = '';
       lineUnits = 0;
       if (lines.length === maxLines - 1) {
-        const rest = text.slice(index);
-        if (textUnits(rest) <= maxUnits) {
-          lines.push(rest.trim());
-        } else {
-          let clipped = '';
-          let clippedUnits = 0;
-          for (const restChar of rest) {
-            const restUnits = textUnits(restChar);
-            if (clippedUnits + restUnits > Math.max(1, maxUnits - 1)) break;
-            clipped += restChar;
-            clippedUnits += restUnits;
-          }
-          lines.push(`${clipped.trimEnd()}…`);
-        }
+        lines.push(...pushRemainder(index));
         return lines;
       }
-      line += char;
-      lineUnits = charUnits;
-    } else {
-      line += char;
-      lineUnits += charUnits;
     }
+    line += token.text;
+    lineUnits += token.units;
   }
 
   if (line.trim()) lines.push(line.trim());
@@ -190,11 +243,16 @@ function textElement(options: TextElementOptions): string {
     family = BODY_FONT,
     opacity = 1,
     filter = true,
+    filterId = 'textShadow',
+    clipPath,
+    letterSpacing,
   } = options;
   const strokeAttrs = stroke
     ? ` stroke="${stroke}" stroke-width="${strokeWidth}" paint-order="stroke fill"`
     : '';
-  return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anchor}" font-family="${family}" font-size="${size.toFixed(1)}" font-weight="${weight}" fill="${fill}" fill-opacity="${opacity}"${strokeAttrs}${filter ? ' filter="url(#textShadow)"' : ''}>${escapeXml(text)}</text>`;
+  const clipAttr = clipPath ? ` clip-path="url(#${clipPath})"` : '';
+  const spacingAttr = letterSpacing ? ` letter-spacing="${letterSpacing.toFixed(2)}"` : '';
+  return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anchor}" font-family="${family}" font-size="${size.toFixed(1)}" font-weight="${weight}"${spacingAttr} fill="${fill}" fill-opacity="${opacity}"${strokeAttrs}${clipAttr}${filter ? ` filter="url(#${filterId})"` : ''}>${escapeXml(text)}</text>`;
 }
 
 function multilineTextElement(
@@ -205,7 +263,14 @@ function multilineTextElement(
   options: Omit<TextElementOptions, 'x' | 'y' | 'text'>,
 ): string {
   if (lines.length === 0) return '';
-  return `<text x="${x.toFixed(1)}" y="${firstBaseline.toFixed(1)}" text-anchor="${options.anchor ?? 'start'}" font-family="${options.family ?? BODY_FONT}" font-size="${options.size.toFixed(1)}" font-weight="${options.weight ?? 700}" fill="${options.fill}" fill-opacity="${options.opacity ?? 1}"${options.stroke ? ` stroke="${options.stroke}" stroke-width="${options.strokeWidth ?? 0}" paint-order="stroke fill"` : ''}${options.filter === false ? '' : ' filter="url(#textShadow)"'}>${lines.map((line, index) => `<tspan x="${x.toFixed(1)}" dy="${index === 0 ? 0 : lineHeight}">${escapeXml(line)}</tspan>`).join('')}</text>`;
+  const strokeAttrs = options.stroke
+    ? ` stroke="${options.stroke}" stroke-width="${options.strokeWidth ?? 0}" paint-order="stroke fill"`
+    : '';
+  const clipAttr = options.clipPath ? ` clip-path="url(#${options.clipPath})"` : '';
+  const filterAttr = options.filter === false
+    ? ''
+    : ` filter="url(#${options.filterId ?? 'textShadow'})"`;
+  return `<text x="${x.toFixed(1)}" y="${firstBaseline.toFixed(1)}" text-anchor="${options.anchor ?? 'start'}" font-family="${options.family ?? BODY_FONT}" font-size="${options.size.toFixed(1)}" font-weight="${options.weight ?? 700}" fill="${options.fill}" fill-opacity="${options.opacity ?? 1}"${strokeAttrs}${clipAttr}${filterAttr}>${lines.map((line, index) => `<tspan x="${x.toFixed(1)}" dy="${index === 0 ? 0 : lineHeight}">${escapeXml(line)}</tspan>`).join('')}</text>`;
 }
 
 function tagsSvg(
@@ -263,11 +328,22 @@ function tagsSvg(
 }
 
 function commonDefs(palette: ThemePalette, width: number, height: number): string {
+  const metalStops = palette.metal
+    .map((color, index) => {
+      const offset = Math.round((index / Math.max(1, palette.metal.length - 1)) * 100);
+      return `<stop offset="${offset}%" stop-color="${color}"/>`;
+    })
+    .join('');
   return `<defs>
     <linearGradient id="titleGradient" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${palette.titleFrom}"/>
-      <stop offset="48%" stop-color="${palette.titleMid}"/>
-      <stop offset="100%" stop-color="${palette.titleTo}"/>
+      ${metalStops}
+    </linearGradient>
+    <linearGradient id="titleShine" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="24%" stop-color="#FFFFFF" stop-opacity="0.08"/>
+      <stop offset="42%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="58%" stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="topScrim" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#000000" stop-opacity="0.5"/>
@@ -275,14 +351,105 @@ function commonDefs(palette: ThemePalette, width: number, height: number): strin
       <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="leftScrim" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#000000" stop-opacity="0.58"/>
-      <stop offset="70%" stop-color="#000000" stop-opacity="0.2"/>
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.62"/>
+      <stop offset="70%" stop-color="#000000" stop-opacity="0.24"/>
       <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="lightBand" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${palette.accent}" stop-opacity="0"/>
+      <stop offset="26%" stop-color="${palette.accent}" stop-opacity="0.28"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.92"/>
+      <stop offset="74%" stop-color="${palette.accent}" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="${palette.accent}" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="bandCore" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.88"/>
+      <stop offset="45%" stop-color="${palette.accentSoft}" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="${palette.accent}" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="topWarmGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="${palette.glow}" stop-opacity="0.5"/>
+      <stop offset="38%" stop-color="#8A5A1E" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cornerShade" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#000000" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bottomShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
     </linearGradient>
     <filter id="textShadow" x="-30%" y="-30%" width="160%" height="180%">
       <feDropShadow dx="0" dy="${Math.max(2, Math.round(height * 0.004))}" stdDeviation="${Math.max(2, Math.round(width * 0.004))}" flood-color="#000000" flood-opacity="0.9"/>
     </filter>
+    <filter id="titleGlow" x="-30%" y="-40%" width="160%" height="200%">
+      <feDropShadow dx="0" dy="${Math.max(2, Math.round(height * 0.005))}" stdDeviation="${Math.max(2, Math.round(width * 0.0025))}" flood-color="#000000" flood-opacity="0.95"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="${Math.max(3, Math.round(width * 0.0035))}" flood-color="${palette.glow}" flood-opacity="0.2"/>
+    </filter>
   </defs>`;
+}
+
+/** 标题裁剪路径序号（每次 buildTextOverlaySvg 重置） */
+let clipSeq = 0;
+
+function nextClipId(prefix: string): string {
+  clipSeq += 1;
+  return `${prefix}${clipSeq}`;
+}
+
+/**
+ * 艺术字标题：3D 挤出层 + 金属渐变主体 + 顶部高光层 + 描边 + 外发光。
+ * 高光层通过 clipPath 裁到字形内部，避免溢出笔画形成"糊边"。
+ */
+function artisticTitle(
+  lines: string[],
+  x: number,
+  firstBaseline: number,
+  lineHeight: number,
+  size: number,
+  palette: ThemePalette,
+  anchor: 'start' | 'middle' | 'end',
+): string {
+  if (lines.length === 0) return '';
+  const clipId = nextClipId('titleClip');
+  const base = {
+    size,
+    anchor,
+    weight: 800 as const,
+    family: TITLE_FONT,
+  };
+  const depth = Math.max(1, size * 0.026);
+
+  const clipDef = `<clipPath id="${clipId}">${multilineTextElement(lines, x, firstBaseline, lineHeight, {
+    ...base,
+    fill: '#000000',
+    filter: false,
+  })}</clipPath>`;
+
+  const extrude = multilineTextElement(lines, x, firstBaseline + depth, lineHeight, {
+    ...base,
+    fill: palette.extrude,
+    filter: false,
+  });
+
+  const main = multilineTextElement(lines, x, firstBaseline, lineHeight, {
+    ...base,
+    fill: 'url(#titleGradient)',
+    stroke: palette.titleStroke,
+    strokeWidth: Math.max(1.6, size * 0.042),
+    filterId: 'titleGlow',
+  });
+
+  const shine = multilineTextElement(lines, x, firstBaseline, lineHeight, {
+    ...base,
+    fill: 'url(#titleShine)',
+    filter: false,
+    clipPath: clipId,
+  });
+
+  return `${clipDef}${extrude}${main}${shine}`;
 }
 
 function renderCover(width: number, height: number, theme: ThemeConfig, palette: ThemePalette): string {
@@ -294,15 +461,7 @@ function renderCover(width: number, height: number, theme: ThemeConfig, palette:
   const tagsY = subtitleY + subtitleSize * 1.85;
   const parts = [
     `<rect width="${width}" height="${height * 0.55}" fill="url(#topScrim)"/>`,
-    multilineTextElement(titleFit.lines, width / 2, titleBaseline, titleFit.lineHeight, {
-      size: titleFit.size,
-      fill: 'url(#titleGradient)',
-      stroke: palette.titleStroke,
-      strokeWidth: Math.max(1.5, titleFit.size * 0.035),
-      anchor: 'middle',
-      weight: 800,
-      family: TITLE_FONT,
-    }),
+    artisticTitle(titleFit.lines, width / 2, titleBaseline, titleFit.lineHeight, titleFit.size, palette, 'middle'),
   ];
 
   if (theme.subtitle?.trim()) {
@@ -334,15 +493,7 @@ function renderCustom(width: number, height: number, theme: ThemeConfig, palette
   const tagsY = subtitleY + subtitleSize * 1.9;
   const parts = [
     `<rect width="${width * 0.78}" height="${height * 0.72}" fill="url(#leftScrim)"/>`,
-    multilineTextElement(titleFit.lines, x, titleBaseline, titleFit.lineHeight, {
-      size: titleFit.size,
-      fill: 'url(#titleGradient)',
-      stroke: palette.titleStroke,
-      strokeWidth: Math.max(1.5, titleFit.size * 0.035),
-      anchor: 'start',
-      weight: 800,
-      family: TITLE_FONT,
-    }),
+    artisticTitle(titleFit.lines, x, titleBaseline, titleFit.lineHeight, titleFit.size, palette, 'start'),
   ];
   if (theme.subtitle?.trim()) {
     parts.push(
@@ -364,23 +515,15 @@ function renderCustom(width: number, height: number, theme: ThemeConfig, palette
 
 function renderTopBanner(width: number, height: number, theme: ThemeConfig, palette: ThemePalette): string {
   const x = width * 0.055;
-  const maxWidth = width * 0.62;
-  const titleFit = fitTitle(theme.title, width, 0.62, height * 0.25, height * 0.13, 2);
+  const maxWidth = width * 0.64;
+  const titleFit = fitTitle(theme.title, width, 0.64, height * 0.28, height * 0.14, 2);
   const blockHeight = titleFit.lineHeight * titleFit.lines.length;
   const firstBaseline = Math.max(height * 0.3, (height - blockHeight) / 2 + titleFit.size * 0.78);
   const subtitleSize = fitSingleLine(theme.subtitle ?? '', maxWidth, height * 0.08, height * 0.045);
   const subtitleY = subtitleBaselineAfterTitle(firstBaseline, titleFit.lineHeight, titleFit.lines.length, titleFit.size, subtitleSize);
   const parts = [
-    `<rect width="${width * 0.82}" height="${height}" fill="url(#leftScrim)"/>`,
-    multilineTextElement(titleFit.lines, x, firstBaseline, titleFit.lineHeight, {
-      size: titleFit.size,
-      fill: 'url(#titleGradient)',
-      stroke: palette.titleStroke,
-      strokeWidth: Math.max(1.2, titleFit.size * 0.03),
-      anchor: 'start',
-      weight: 800,
-      family: TITLE_FONT,
-    }),
+    `<rect width="${width * 0.88}" height="${height}" fill="url(#leftScrim)"/>`,
+    artisticTitle(titleFit.lines, x, firstBaseline, titleFit.lineHeight, titleFit.size, palette, 'start'),
   ];
   if (theme.subtitle?.trim()) {
     parts.push(
@@ -404,15 +547,7 @@ function renderMidBanner(width: number, height: number, theme: ThemeConfig, pale
   const tagsY = height * 0.7;
   return [
     `<rect width="${width}" height="${height}" fill="#000000" fill-opacity="0.12"/>`,
-    multilineTextElement(titleFit.lines, width / 2, titleY, titleFit.lineHeight, {
-      size: titleFit.size,
-      fill: 'url(#titleGradient)',
-      stroke: palette.titleStroke,
-      strokeWidth: Math.max(1.4, titleFit.size * 0.032),
-      anchor: 'middle',
-      weight: 800,
-      family: TITLE_FONT,
-    }),
+    artisticTitle(titleFit.lines, width / 2, titleY, titleFit.lineHeight, titleFit.size, palette, 'middle'),
     tagsSvg(theme.tags, width / 2, tagsY, width * 0.82, palette, true, height * 0.07),
   ].join('');
 }
@@ -426,15 +561,7 @@ function renderPopup(width: number, height: number, theme: ThemeConfig, palette:
   const cardGap = height * 0.035;
   const parts = [
     `<rect width="${width}" height="${height * 0.32}" fill="url(#topScrim)"/>`,
-    multilineTextElement(titleFit.lines, width / 2, height * 0.1 + titleFit.size, titleFit.lineHeight, {
-      size: titleFit.size,
-      fill: 'url(#titleGradient)',
-      stroke: palette.titleStroke,
-      strokeWidth: Math.max(1.3, titleFit.size * 0.03),
-      anchor: 'middle',
-      weight: 800,
-      family: TITLE_FONT,
-    }),
+    artisticTitle(titleFit.lines, width / 2, height * 0.1 + titleFit.size, titleFit.lineHeight, titleFit.size, palette, 'middle'),
   ];
 
   const gifts = (theme.gifts ?? []).filter((gift) => gift.name?.trim()).slice(0, 3);
@@ -483,32 +610,95 @@ function renderPopup(width: number, height: number, theme: ThemeConfig, palette:
   return parts.join('');
 }
 
+/**
+ * 居中商务 banner（黑金直播 banner 风格）：
+ * 纯色底图上居中一行金属艺术字，标题下方一条水平光带，
+ * 再下方是浅色副标题，最底部是三段金色装饰线。
+ */
+function renderCenterBanner(width: number, height: number, theme: ThemeConfig, palette: ThemePalette): string {
+  const titleFit = fitTitle(theme.title, width, 0.62, height * 0.36, height * 0.18, 1);
+  const titleBaseline = height * 0.46;
+  const bandY = height * 0.575;
+  const subtitleBaseline = height * 0.7;
+  const decoY = height * 0.79;
+
+  const parts: string[] = [
+    // 顶部暖金光晕：本地绘制，保证商务氛围不依赖 AI 随机结果
+    `<ellipse cx="${(width * 0.6).toFixed(1)}" cy="${(height * 0.12).toFixed(1)}" rx="${(width * 0.5).toFixed(1)}" ry="${(height * 0.62).toFixed(1)}" fill="url(#topWarmGlow)"/>`,
+    // 右上角压暗：抹掉 AI 偶尔画出的颗粒/星点
+    `<ellipse cx="${(width * 1.0).toFixed(1)}" cy="${(height * 0.02).toFixed(1)}" rx="${(width * 0.45).toFixed(1)}" ry="${(height * 0.75).toFixed(1)}" fill="url(#cornerShade)"/>`,
+    // 底部压暗：提亮文字对比，同时收掉底部杂点
+    `<rect x="0" y="${(height * 0.58).toFixed(1)}" width="${width}" height="${(height * 0.42).toFixed(1)}" fill="url(#bottomShade)"/>`,
+    // 水平光带：中间最亮，向两边衰减
+    `<rect x="0" y="${(bandY - height * 0.007).toFixed(1)}" width="${width}" height="${(height * 0.014).toFixed(1)}" fill="url(#lightBand)"/>`,
+    `<ellipse cx="${(width / 2).toFixed(1)}" cy="${bandY.toFixed(1)}" rx="${(width * 0.09).toFixed(1)}" ry="${(height * 0.07).toFixed(1)}" fill="url(#bandCore)"/>`,
+    artisticTitle(titleFit.lines, width / 2, titleBaseline, titleFit.lineHeight, titleFit.size, palette, 'middle'),
+  ];
+
+  if (theme.subtitle?.trim()) {
+    const subtitleSize = fitSingleLine(theme.subtitle, width * 0.66, height * 0.066, height * 0.04);
+    parts.push(
+      textElement({
+        x: width / 2,
+        y: subtitleBaseline,
+        text: theme.subtitle,
+        size: subtitleSize,
+        fill: '#EDEDF0',
+        anchor: 'middle',
+        weight: 600,
+        letterSpacing: subtitleSize * 0.08,
+      }),
+    );
+  }
+
+  // 底部三段装饰线：中间最长最亮
+  const segWidths = [width * 0.03, width * 0.05, width * 0.03];
+  const segGap = width * 0.007;
+  const segTotal = segWidths.reduce((sum, value) => sum + value, 0) + segGap * (segWidths.length - 1);
+  let cursor = width / 2 - segTotal / 2;
+  const segColors = [palette.accent, '#FFF3D0', palette.accent];
+  segWidths.forEach((segWidth, index) => {
+    parts.push(
+      `<rect x="${cursor.toFixed(1)}" y="${(decoY - height * 0.004).toFixed(1)}" width="${segWidth.toFixed(1)}" height="${(height * 0.008).toFixed(1)}" fill="${segColors[index]}" fill-opacity="${index === 1 ? 0.95 : 0.68}"/>`,
+    );
+    cursor += segWidth + segGap;
+  });
+
+  return parts.join('');
+}
+
 export function buildTextOverlaySvg(
   category: Category,
   theme: ThemeConfig & { title: string },
   width: number,
   height: number,
   colorTone: ColorTone = 'black_gold',
+  layout: 'left' | 'center' = 'left',
 ): string {
+  clipSeq = 0;
   const palette = PALETTES[colorTone] ?? PALETTES.black_gold;
   let content = '';
-  switch (category) {
-    case 'cover':
-      content = renderCover(width, height, theme, palette);
-      break;
-    case 'top_banner':
-      content = renderTopBanner(width, height, theme, palette);
-      break;
-    case 'mid_banner':
-      content = renderMidBanner(width, height, theme, palette);
-      break;
-    case 'popup':
-      content = renderPopup(width, height, theme, palette);
-      break;
-    case 'custom':
-    default:
-      content = renderCustom(width, height, theme, palette);
-      break;
+  if (layout === 'center') {
+    content = renderCenterBanner(width, height, theme, palette);
+  } else {
+    switch (category) {
+      case 'cover':
+        content = renderCover(width, height, theme, palette);
+        break;
+      case 'top_banner':
+        content = renderTopBanner(width, height, theme, palette);
+        break;
+      case 'mid_banner':
+        content = renderMidBanner(width, height, theme, palette);
+        break;
+      case 'popup':
+        content = renderPopup(width, height, theme, palette);
+        break;
+      case 'custom':
+      default:
+        content = renderCustom(width, height, theme, palette);
+        break;
+    }
   }
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${commonDefs(palette, width, height)}${content}</svg>`;
@@ -530,6 +720,7 @@ export async function applyTextOverlay(
     width,
     height,
     options.colorTone ?? 'black_gold',
+    options.layout ?? 'left',
   );
   const buffer = await sharp(image)
     .rotate()

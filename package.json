@@ -10,8 +10,24 @@
     "dev:frontend": "cd web && npx vite --host --port 5182",
     "build:web": "cd web && npm run build",
     "test": "bun test",
-    "typecheck": "tsc --noEmit",
-    "test:vitest": "vitest run"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p scripts/tsconfig.json",
+    "test:vitest": "vitest run",
+    "shop:list": "bun run scripts/gen-shop-listing.ts --list",
+    "shop:gen": "bun run scripts/gen-shop-listing.ts",
+    "shop:gen:v8": "bun run scripts/gen-shop-listing.ts v8",
+    "shop:check": "bun run scripts/check-listing-compliance.ts",
+    "shop:check:v2": "bun run scripts/check-listing-compliance.ts v2",
+    "shop:check:v3": "bun run scripts/check-listing-compliance.ts v3",
+    "shop:check:v4": "bun run scripts/check-listing-compliance.ts v4",
+    "shop:check:v7": "bun run scripts/check-listing-compliance.ts v7",
+    "asset:list": "bun run scripts/gen-asset.ts --list",
+    "asset:gen": "bun run scripts/gen-asset.ts",
+    "poster:list": "bun run scripts/gen-poster.ts --list",
+    "poster:gen": "bun run scripts/gen-poster.ts",
+    "poster:probe": "bun run scripts/html-poster-probe.ts",
+    "render:env": "bun run scripts/check-render-env.ts --probe",
+    "render:determinism": "bun run scripts/check-render-determinism.ts",
+    "render:bench": "bun run scripts/check-render-bench.ts"
   },
   "engines": {
     "bun": ">=1.0.0"
@@ -20,9 +36,13 @@
   "devDependencies": {
     "@types/bun": "^1.4.1",
     "@types/node": "^26.4.1",
+    "@types/qrcode": "^1.5.6",
+    "playwright": "^1.64.1",
+    "typescript": "~5.4.5",
     "vitest": "^1.6.0"
   },
   "dependencies": {
+    "qrcode": "^1.5.4",
     "sharp": "^0.35.5"
   }
 }

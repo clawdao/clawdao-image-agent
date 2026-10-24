@@ -1,0 +1,584 @@
+id: v2
+label: AI赚钱系统自我进化训练营（V2 · 暖色版 · 含盈利导向表述，勿上架）
+outputDir: ./outputs/shop-listing-v2
+theme: warm
+compliance: ./configs/compliance/v2.yaml
+vars:
+  titleModifier: AI 实战
+  titleMain: AI赚钱系统自我进化训练营
+  titleLines: AI赚钱系统自我进化训练营
+  enLabel: AI SYSTEM EVOLUTION CAMP
+  brandFull: 利姆斯科技 · 亿检链团队
+product:
+  name: AI赚钱系统自我进化训练营
+  category: 虚拟商品 · 读书卡类
+  brand: 利姆斯科技 · 亿检链团队
+  delivery: 3天直播连播 + 全程录播回放 + 分节讲义与作业模板 + 7天社群答疑
+  gifts: 赠「选题智能体」+「公众号智能体」
+author:
+  avatar: ./assets/shop-listing/author-avatar.png
+content:
+  targetTable:
+    - who: 企业高管
+      gain: 把 AI 落进公司真实流程，而不是再买一套概念
+    - who: 实体老板
+      gain: 获客、交付、复购——看清哪一环能被 AI 接管
+    - who: 创业者
+      gain: 一个人干一支团队的活，从第一天就系统化
+    - who: 自媒体
+      gain: 同时提升内容产能与转化效率
+    - who: 超级个体
+      gain: 把个人经验变成可交付、可复制的产品
+    - who: 对 AI 创业感兴趣的个人
+      gain: 建立一套自己的判断与动作
+posters:
+  - file: main-0-title
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    tone: warm_amber
+    glowX: 0.5
+    blocks:
+      - kind: title
+        spec:
+          enLabel: SELF-EVOLVING AI BUSINESS CAMP
+          eyebrow: 亿检链 · AI 数字员工实战课
+          title: |-
+            AI赚钱系统
+            自我进化训练营
+          subtitle: |-
+            3 天直播课：装好亿检智能体
+            把你的生意做成一套会自我成长进化的系统
+          stats:
+            - value: 3天
+              label: 连播实战
+            - value: 2个
+              label: 智能体赠品
+            - value: 1套
+              label: 会自我进化的系统
+          badges:
+            - 全程录播回放
+            - 7 天社群答疑
+      - kind: footer
+        text: 利姆斯科技 · 亿检链团队
+  - file: main-1-hero
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    tone: warm_amber
+    glowX: 0.72
+    blocks:
+      - kind: hero
+        kicker: 亿检链 · AI 数字员工实战课
+        title: |-
+          AI赚钱系统
+          自我进化训练营
+        subtitle: |-
+          3 天直播课：装好亿检智能体
+          把你的生意做成一套会自我成长进化的系统
+        badges:
+          - 3 天连播
+          - 赠选题 + 公众号智能体
+      - kind: cards
+        columns: 3
+        items:
+          - tag: DAY 1
+            title: 安装与配置
+            lines:
+              - 下载安装与配置
+              - 跑通第一个任务
+              - 3 个高频卡点拆解
+          - tag: DAY 2
+            title: 自我进化演练
+            lines:
+              - 拆解你的赚钱系统
+              - 最累的一环交给它
+              - 现场演练与点评
+          - tag: DAY 3
+            title: 生存逻辑与机遇
+            lines:
+              - 积极拥抱 AI 化
+              - 拥抱社群 DAO
+              - 产品与服务自动化
+      - kind: note
+        text: |-
+          不讲概念，只讲你回去要做的第一步。
+          面向企业高管 / 实体老板 / 创业者 / 自媒体 / 超级个体，
+          以及对 AI 创业感兴趣的个人。
+      - kind: footer
+        text: 利姆斯科技 · 亿检链团队
+  - file: main-2-system
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    tone: warm_amber
+    glowX: 0.3
+    blocks:
+      - kind: hero
+        kicker: 3 天连播 · 一次跑通
+        title: |-
+          三天，把智能体
+          装进你的生意
+        subtitle: LIMS 成功公式：L 检测 · I 决策 · M 执行 · S 追溯，再乘一个 AI 自治
+      - kind: cards
+        columns: 3
+        items:
+          - tag: DAY 1
+            title: 安装与配置
+            lines:
+              - 下载安装与配置
+              - 跑通第一个任务
+              - 3 个高频卡点拆解
+          - tag: DAY 2
+            title: 自我进化演练
+            lines:
+              - 拆解你的赚钱系统
+              - 最累的一环交给它
+              - 现场演练与点评
+          - tag: DAY 3
+            title: 生存逻辑与机遇
+            lines:
+              - 积极拥抱 AI 化
+              - 拥抱社群 DAO
+              - 产品与服务自动化
+      - kind: note
+        text: |-
+          学完你带走 4 样东西：
+          ① 装好能用的亿检智能体实例　② 1 个社群，1 套软件，2 个智能体
+          ③ 一套会自我成长进化的系统　④ 一份 90 天行动清单
+      - kind: footer
+        text: 可检测 · 可决策 · 可执行 · 可追溯 · 可信任
+  - file: main-3-audience
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    tone: warm_amber
+    glowX: 0.5
+    blocks:
+      - kind: hero
+        kicker: 适合谁
+        title: 这门课为谁而设
+        subtitle: |-
+          你不需要会写代码，但需要愿意动手
+          三天时间把工具真正用起来
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 企业高管
+            title: 让 AI 落进真实流程
+            lines:
+              - 不想再买一套概念
+              - 要能算清投入产出
+          - tag: 实体老板
+            title: 获客 / 交付 / 复购
+            lines:
+              - 哪一环能被接管
+              - 人效怎么提上来
+          - tag: 创业者
+            title: 一个人干一支团队的活
+            lines:
+              - 从第一天就系统化
+              - 不靠运气靠流程
+          - tag: 自媒体 · 超级个体
+            title: 把经验变成可交付产品
+            lines:
+              - 内容产能与转化
+              - 经验可复制可收费
+      - kind: note
+        text: |-
+          交付形式：3 天线上直播连播（每场 90–120 分钟）、全程录播回放
+          分节讲义与作业模板、7 天社群答疑。虚拟商品，报名后进班级群。
+      - kind: footer
+        text: 利姆斯科技 · 亿检链团队
+  - file: main-4-notice
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    tone: warm_amber
+    glowX: 0.68
+    blocks:
+      - kind: hero
+        kicker: 购买须知
+        title: 重要提醒
+        subtitle: |-
+          下单前请看这两条
+          先说清楚，再决定要不要买
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 虚拟商品
+            title: 购买后不支持退款
+            lines:
+              - 线上课程为虚拟商品
+              - 购买后不支持退款
+              - 可申请电子发票
+          - tag: 资料领取
+            title: 及时联系客服
+            lines:
+              - 购买后及时联系客服
+              - 领取学习流程和课程资料
+      - kind: note
+        text: |-
+          课程为线上直播 + 回放，报名后进班级群。
+          咨询与售后：利姆斯科技 · 亿检链团队。
+      - kind: footer
+        text: "{{product.name}}"
+  - file: detail-1-classflow
+    width: 1080
+    tone: warm_amber
+    glowX: 0.66
+    blocks:
+      - kind: hero
+        kicker: CLASS FLOW
+        title: 上课流程全景
+        subtitle: |-
+          课前准备 · 课中连播 · 课后交付
+          三天连播，每场 90–120 分钟，实时答疑与连麦拆解
+      - kind: section
+        label: DAY 1 — 3
+        title: 三天主线
+        desc: 每一天只解决一个真问题：从装起来，到用起来，再到赚起来。
+      - kind: timeline
+        items:
+          - time: DAY 1 20:00
+            title: 亿检智能体安装与配置
+            lines:
+              - 认识它：它替你做什么、不做什么
+              - 下载安装、账号与权限、环境自检
+              - 第一次实战：把一个模糊想法变成可验证的需求
+              - 排错清单：新手最容易卡住的 3 个地方
+          - time: DAY 2 20:00
+            title: AI 赚钱系统自我进化演练
+            lines:
+              - 拆系统：流量、产品、交付、复购，你长什么样
+              - 找缺口：哪一环最耗人、哪一环最不赚钱
+              - 上智能体：把最耗人的那一环交出去
+              - 现场演练 + 作业点评：改造成能自我进化的版本
+          - time: DAY 3 20:00
+            title: AI 时代的生存逻辑和机遇
+            lines:
+              - 积极拥抱 AI：别观望，先让业务 AI 化
+              - 积极拥抱社群 DAO：加入一个，或自己构建一个
+              - 打造赚钱系统：把产品、服务、经验都自动化
+              - 90 天行动清单：第一周、第一月、第一季
+      - kind: section
+        label: BEFORE / DURING / AFTER
+        title: 课前·课中·课后
+      - kind: rows
+        items:
+          - label: 课前
+            title: 提前 10 分钟完成准备
+            lines:
+              - 下单成功 → 收到【亿检链】开头的短信
+              - 按说明进班级群，提前 10 分钟完成准备
+          - label: 课中
+            title: 直播连播，可连麦拆解
+            lines:
+              - 三天连播，每晚 20:00 开播，每场 90–120 分钟
+              - 实时答疑、连麦拆解真实业务
+              - 当堂演练、当天作业次日点评
+          - label: 课后
+            title: 不是听完就没了
+            lines:
+              - 全程录播回放 + 分节讲义
+              - 作业模板包
+              - 7 天社群答疑
+      - kind: note
+        text: |-
+          所有付费客户均可参加免费直播答疑：
+          常见问题集中解答 + 新功能演示
+      - kind: footer
+        text: 利姆斯科技 · 亿检链团队
+  - file: detail-2-author-audience
+    width: 1080
+    tone: warm_amber
+    glowX: 0.28
+    blocks:
+      - kind: hero
+        kicker: ABOUT · FOR WHO
+        title: 谁来讲，讲给谁听
+        subtitle: |-
+          把踩过的坑讲成能照着做的步骤
+          这门课不负责承诺，负责教你上手
+      - kind: profile
+        profile:
+          avatar: "{{author.avatar}}"
+          name: 顺道大叔
+          role: 亿检链创始人 · 开发者
+          bullets:
+            - 亿检链 LIMS 平台联合创始人
+            - 《Node.js 区块链开发》《Web3.0 数字化实战》作者
+            - 200+ 企业客户咨询高级顾问
+            - 军工、政府、企业等重磅案例
+      - kind: note
+        text: 长期做需求文档与产品实践，把亿检智能体用进真实业务，带队跑通企业服务与内容创作两条线。不讲行业大词，只讲你回去第一步该做什么。
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 他做过
+            title: 真实业务落地
+            lines:
+              - 把智能体装进企业流程
+              - 也装进内容生产线
+          - tag: 他讲得
+            title: 能照做的步骤
+            lines:
+              - 不讲趋势，讲动作
+              - 每一步都有验收标准
+      - kind: section
+        label: 目标客户
+        title: 谁适合来，谁不必来
+        desc: 这门课解决的是「用了没用起来」的问题，不是「要不要用 AI」的问题。
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 落地难
+            title: 企业高管
+            lines:
+              - 想把 AI 落进公司流程
+              - 要能对结果负责
+          - tag: 人效低
+            title: 实体老板
+            lines:
+              - 获客交付复购
+              - 哪一环能被接管
+          - tag: 起步期
+            title: 创业者
+            lines:
+              - 一个人干一支团队
+              - 从第一天系统化
+          - tag: 经验变现
+            title: 自媒体 / 超级个体
+            lines:
+              - 内容产能与转化
+              - 经验可复制可收费
+      - kind: note
+        text: 不必来：只想要资料包不愿听课的人；期待「三天暴富」的人；完全不想动手配置的人。
+      - kind: rows
+        title: 常见问题
+        items:
+          - label: Q1
+            title: 上课需要准备什么？
+            lines:
+              - 一台电脑。安装包与环境自检清单课前发放。
+          - label: Q2
+            title: 错过直播怎么办？
+            lines:
+              - 全程录播回放，分节讲义同步更新，社群答疑持续 7 天。
+          - label: Q3
+            title: 是完全线下的吗？
+            lines:
+              - 线上直播课。虚拟商品，报名后进班级群，不发实物。
+          - label: Q4
+            title: 没有技术背景能跟上吗？
+            lines:
+              - 能。Day 1 就是从下载安装开始手把手带你做。
+          - label: Q5
+            title: 课程能保证什么？
+            lines:
+              - 我们提供方法与工具；能发挥到多少，是你自己用出来的。
+      - kind: note
+        text: 我们给你五项能力：可检测 · 可决策 · 可执行 · 可追溯 · 可信任。也要你三件投入：引进 · 重视 · 投入。五项能力 × 你的三件投入 = 你的经营确定性。
+      - kind: footer
+        text: 利姆斯科技 · 亿检链团队
+copy:
+  fileName: 商品文案.md
+  blocks:
+    - type: heading
+      level: 1
+      text: "{{product.name}}"
+    - type: fields
+      fields:
+        - label: 商品名称
+          value: "{{product.name}}"
+        - label: 商品属性
+          value: "{{product.category}}"
+        - label: 售价
+          value: 以商品后台设置为准（图与文案均不写死价格）
+        - label: 品牌
+          value: "{{product.brand}}"
+        - label: 交付形式
+          value: 3 天线上直播连播 + 全程录播回放 + 分节讲义与作业模板 + 7 天社群答疑
+        - label: 赠品
+          value: 选题智能体 + 公众号智能体
+    - type: hr
+    - type: heading
+      level: 2
+      text: 一句话说明
+    - type: raw
+      text: |-
+        三天直播课：装好亿检智能体，把你的生意做成一套会自我成长进化的系统。
+
+        不讲概念，只讲你回去要做的第一步。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程简介
+    - type: raw
+      text: |-
+        这不是一堂讲概念的课。
+
+        三天时间，我们陪你把「亿检智能体」装进电脑、接进业务、跑通一次完整闭环：
+        从 Day 1 的手把手安装，到 Day 2 的赚钱系统实战改造，再到 Day 3 的生存逻辑重新推演。
+
+        学完你带走的不是一个软件，而是一套**会自我成长进化的系统**。
+
+        课程主线沿着亿检链的 LIMS 成功公式展开：**L 检测 · I 决策 · M 执行 · S 追溯**，再乘上一个 AI 自治。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程内容
+    - type: heading
+      level: 3
+      text: Day 1｜亿检智能体安装与配置
+    - type: raw
+      text: |-
+        - 认识它：亿检智能体到底替你做什么、不做什么
+        - 下载安装、账号与权限、环境自检
+        - 第一次实战：用「撰写需求文档」模版，把一个模糊想法变成可验证的需求
+        - 排错清单：新手最容易卡住的 3 个地方，一次讲透
+    - type: heading
+      level: 3
+      text: Day 2｜AI 赚钱系统自我进化演练
+    - type: raw
+      text: |-
+        - 拆系统：流量、产品、交付、复购——你的赚钱系统现在长什么样
+        - 找缺口：哪一环最耗人、哪一环最不赚钱
+        - 上智能体：把最耗人的那一环交给亿检智能体接管
+        - 现场演练 + 作业点评：把它改造成能自我进化的版本
+    - type: heading
+      level: 3
+      text: Day 3｜AI 时代的生存逻辑和机遇
+    - type: raw
+      text: |-
+        - 积极拥抱 AI：别观望，先让业务 AI 化
+        - 积极拥抱社群 DAO：加入一个，或自己构建一个
+        - 打造赚钱系统：把产品、服务、经验都自动化
+        - 90 天行动清单：回去第一周、第一月、第一季度分别做什么
+    - type: hr
+    - type: heading
+      level: 2
+      text: 上课流程
+    - type: raw
+      text: |-
+        **课前**　下单成功 → 收到【亿检链】开头的短信 → 按说明进班级群，提前 10 分钟完成准备
+
+        **课中**　三天连播，每晚 20:00 开播，每场 90–120 分钟；实时答疑、连麦拆解真实业务、当堂演练、当天作业次日点评
+
+        **课后**　全程录播回放 + 分节讲义 + 作业模板包 + 7 天社群答疑
+
+        > 所有付费客户均可参加免费直播答疑（常见问题集中解答 + 新功能演示）。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 目标客户
+    - type: targetTable
+    - type: raw
+      text: "**不适合**：只想要资料包不愿听课的人；期待「三天暴富」的人；完全不想动手配置的人。"
+    - type: hr
+    - type: heading
+      level: 2
+      text: 作者介绍
+    - type: raw
+      text: |-
+        **顺道大叔 · 亿检链创始人、开发者**
+
+        - 亿检链 LIMS 平台联合创始人
+        - 《Node.js 区块链开发》《Web3.0 数字化实战》作者
+        - 200+ 企业客户咨询高级顾问
+        - 军工、政府、企业等重磅案例
+
+        长期做需求文档与产品实践，把亿检智能体用进真实业务，带队跑通企业服务与内容创作两条线。
+
+        本课程由他主讲。不讲行业大词，只讲你回去第一步该做什么——把踩过的坑讲成可以照着做的步骤。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 你会带走什么
+    - type: raw
+      text: |-
+        1. 装好并用起来的亿检智能体实例
+        2. 1 个社群，1 套软件，2 个智能体
+        3. 一套会自我成长进化的系统
+        4. 一份 90 天行动清单
+    - type: hr
+    - type: heading
+      level: 2
+      text: 常见问题
+    - type: raw
+      text: |-
+        **Q：上课需要准备什么？**
+        一台电脑。安装包与环境自检清单课前发放。
+
+        **Q：错过直播怎么办？**
+        全程录播回放，分节讲义同步更新，社群答疑持续 7 天。
+
+        **Q：是完全线下的吗？**
+        线上直播课。虚拟商品，报名后进班级群，不发实物。
+
+        **Q：没有技术背景能跟上吗？**
+        能。Day 1 就是从下载安装开始，手把手带你做。
+
+        **Q：课程能保证什么？**
+        我们提供方法与工具；能发挥到多少，是你自己用出来的。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 重要提醒
+    - type: raw
+      text: |-
+        线上课程为虚拟商品，购买后不支持退款，可申请电子发票。
+
+        线上课程服务购买后，及时联系客服，领取学习流程和课程资料。
+    - type: hr
+    - type: heading
+      level: 2
+      text: 服务与售后
+    - type: raw
+      text: |-
+        - 退款按视频号小店平台规则执行
+        - 课程咨询与售后由利姆斯科技 · 亿检链团队提供
+    - type: hr
+    - type: heading
+      level: 2
+      text: 品牌背景
+    - type: raw
+      text: |-
+        **亿检链 = 亿 + 检 + 链**　亿是规模，检是看见和验证，链是连接和追溯。
+
+        用 AI 和数据，让企业的每一项关键业务都**可检测、可决策、可执行、可追溯**，在人工智能大潮里成为 AI Native。
+
+        在检测行业，亿检链 LIMS 已服务 300+ 家实验室，单份报告交付周期从 72 小时缩短到 18 小时（72%↓），记录差错率下降 92%。
+
+        **利姆斯科技 · 亿检链团队**
+    - type: hr
+    - type: heading
+      level: 2
+      text: 配图清单
+    - type: raw
+      text: |-
+        | 文件 | 尺寸 | 用途 |
+        | --- | --- | --- |
+        | `main-0-title.png` | 1080×1080 | 课程标题封面（大字报） |
+        | `main-1-hero.png` | 1080×1080 | 商品首图（主视觉） |
+        | `main-2-system.png` | 1080×1080 | 课程体系与学习收获 |
+        | `main-3-audience.png` | 1080×1080 | 适合谁 + 交付形式 |
+        | `main-4-notice.png` | 1080×1080 | 重要提醒（虚拟商品说明） |
+        | `detail-1-classflow.png` | 1080×长图 | 核心内容：上课流程全景 |
+        | `detail-2-author-audience.png` | 1080×长图 | 核心内容：作者介绍 + 目标客户 + 常见问题 |
+    - type: hr
+    - type: heading
+      level: 2
+      text: 运营备注（不对外展示）
+    - type: raw
+      text: |-
+        1. **类目**：按你指定的「读书卡类 / 虚拟商品」填写。若平台按“教育培训”口径审核，需同步准备对应的课程类目资质与售后说明。
+        2. **价格**：图与文案均不写死价格，请在商品后台设置。改价时无需重新出图。
+        3. **域名**：官网地址已从图中移除（未来可能更换），需要时再补。
+        4. **图片**：封面大字报用 `main-0-title.png`，主图第 1 张用 `main-1-hero.png`；详情页建议按「主视觉 → 课程体系 → 适合谁 → 重要提醒 → 上课流程 → 作者与 FAQ」顺序铺排。
+        5. **作者**：署名已确认为「顺道大叔 · 亿检链创始人、开发者」，头像使用 `assets/shop-listing/author-avatar.png`；换人需同步替换长图与详情文案。

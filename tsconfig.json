@@ -13,10 +13,10 @@
     "skipLibCheck": true,
     "strict": false,
     "noImplicitAny": false,
-    "baseUrl": ".",
+    // 注意：TypeScript 6+ 已移除 baseUrl，paths 必须使用相对路径（以 ./ 开头）。
     "paths": {
-      "@lib/*": ["src/lib/*"],
-      "@types/*": ["src/types/*"]
+      "@lib/*": ["./src/lib/*"],
+      "@types/*": ["./src/types/*"]
     }
   },
   "include": ["src/**/*.ts"],

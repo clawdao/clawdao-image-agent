@@ -1,0 +1,668 @@
+id: v8
+label: 亿检智能体零基础实操训练营（V8 · 清新绿 · 当前交付版）
+outputDir: ./outputs/shop-listing-v8
+theme: fresh
+compliance: ./configs/compliance/v8.yaml
+vars:
+  titleModifier: 人工智能培训
+  titleMain: 亿检智能体零基础实操训练营
+  titleLines: |-
+    亿检智能体
+    零基础实操训练营
+  enLabel: YIJIAN AGENT HANDS-ON CAMP
+  brandFull: 利姆斯科技 · 亿检链团队
+product:
+  name: 亿检智能体零基础实操训练营
+  category: 虚拟商品 · 数字课程（智能体工具技术实战）
+  brand: 利姆斯科技 · 亿检链团队
+  delivery: 10+ 节实操课 + 作业模板 + 直播答疑 + 班级群交流
+  gifts: 选题智能体 + 内容智能体（内容创作辅助工具模板）
+  position: 面向零基础学习者，10+ 节实操课：装好智能体、写好提示词、把方法带回日常
+brand:
+  logo: ./assets/shop-listing/lims-logo.png
+  text: 亿检链
+author:
+  name: 顺道大叔
+  role: 亿检链创始人 · 开发者
+  avatar: ./assets/shop-listing/author-avatar.png
+  bullets:
+    - 亿检链平台联合创始人
+    - 《Node.js 区块链开发》《Web3.0 数字化实战》作者
+    - 长期企业级项目实践与咨询经验
+    - 军工、政府、企业等多场景项目实践经历
+content:
+  modules:
+    - label: M1
+      title: 智能体安装配置与调试
+      summary: 装起来：下载安装、环境自检、参数调通
+      lines:
+        - 完成智能体部署与环境配置、参数调试，跑通首个可用智能体实例。
+    - label: M2
+      title: 提示词与需求模板
+      summary: 写清楚：拆解提示词结构，沉淀需求模板
+      lines:
+        - 拆解提示词结构，沉淀标准化需求模板。
+        - 把零散信息整理成结构化需求，重复交互沉淀为可复用资产。
+    - label: M3
+      title: 持续优化机制体验
+      summary: 用顺了：看懂每次改动带来的输出变化
+      lines:
+        - 实践反馈—调整—再验证的迭代循环，
+        - 看懂参数与提示词改动带来的输出变化。
+    - label: M4
+      title: 工具串接与流程编排
+      summary: 串起来：按节点配置，掌握编排与验收
+      lines:
+        - 把工具按节点串接起来，掌握编排逻辑、
+        - 节点配置方法与输出验收标准，完成完整跑通验证。
+    - label: M5
+      title: 效率工具落地
+      summary: 带得走：接进日常工具链，沉淀可复用配置
+      lines:
+        - 将智能体对接至常用工作工具，沉淀可复用的实操配置方法。
+        - 把课堂里的方法带回真实工作里。
+  audience:
+    - tag: 零基础
+      title: 没接触过也能跟上
+      lines:
+        - 从下载安装讲起
+        - 术语当场解释
+    - tag: 内容策划岗
+      title: 内容与素材处理
+      lines:
+        - 用工具处理日常素材
+        - 沉淀可复用的方法
+    - tag: 中小企业负责人
+      title: 需求 / 交付 / 复盘
+      lines:
+        - 识别可引入工具的环节
+    - tag: 小团队负责人
+      title: 先跑通，再复制
+      lines:
+        - 方法验证后再分配执行
+  targets:
+    - tag: 零基础起步
+      title: 零基础学习者
+      lines:
+        - 从下载安装开始上手
+    - tag: 内容处理
+      title: 内容策划岗 / 独立工作者
+      lines:
+        - 内容与素材的实操处理
+    - tag: 需求落地
+      title: 中小企业负责人
+      lines:
+        - 需求 / 交付 / 复盘
+    - tag: 起步阶段
+      title: 小团队负责人
+      lines:
+        - 方法验证后再分工
+  faq:
+    - label: Q1
+      title: 上课需要准备什么？
+      lines:
+        - 一台电脑。安装指引与环境自检清单会在课前发放。
+    - label: Q2
+      title: 课程怎么安排？
+      lines:
+        - 10+ 节实操课按五个模块推进，每个模块都有配套作业模板。
+    - label: Q3
+      title: 直播答疑怎么参加？
+      lines:
+        - 报名后进班级群，群内同步答疑时间与作业提交安排。
+    - label: Q4
+      title: 没有技术背景能跟上吗？
+      lines:
+        - 可以。第一天从软件下载安装开始手把手教学，跟着实操逐步积累工具使用技能。
+    - label: Q5
+      title: 课程会包含什么？
+      lines:
+        - 实操方法、工具资源与作业模板（含提示词模板与验收清单）；个人实际应用效果取决于自身实操练习投入。
+    - label: Q6
+      title: 训练营怎么上课？
+      lines:
+        - 实操课按模块顺序推进，直播答疑集中解答实操问题。
+  targetTable:
+    - who: 零基础学习者
+      gain: 从下载安装到跑通第一个智能体，拿到一套可复现的操作步骤
+    - who: 内容策划岗 / 独立工作者
+      gain: 借助智能体工具处理内容与素材，沉淀可复用的实操方法
+    - who: 中小企业负责人
+      gain: 理解需求、交付、复盘的工作链路，识别可引入智能体工具辅助的工作环节
+    - who: 小团队负责人
+      gain: 掌握工具串接与流程编排方法，验证后再分配团队执行
+    - who: 对智能体工具与方法感兴趣的个人
+      gain: 建立对智能体工具的实操认知，形成个人操作方法论
+posters:
+  - file: main-0-title
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: title
+        spec:
+          enLabel: YIJIAN AGENT HANDS-ON CAMP
+          eyebrow: "{{vars.titleModifier}}"
+          title: "{{vars.titleLines}}"
+          subtitle: |-
+            从下载安装到跑通第一个智能体
+            装起来 · 用顺了 · 带得走
+          stats:
+            - value: 10+
+              label: 节实操课
+            - value: 5大
+              label: 实操模块
+            - value: 2个
+              label: 智能体模板
+          badges:
+            - 零基础可上手
+            - 直播答疑
+            - 全程录播
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-1-hero
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: "{{vars.titleModifier}}"
+        title: "{{vars.titleLines}}"
+        subtitle: |-
+          10+ 节实操课 + 直播答疑
+          从安装配置到日常工具落地
+        badges:
+          - 10+ 节实操课
+          - 5 个实操模块
+          - 作业模板
+          - 直播答疑
+      - kind: note
+        text: |-
+          五个模块，10+ 节实操课：
+          M1 安装配置与调试　M2 提示词与需求模板
+          M3 持续优化机制体验　M4 工具串接与流程编排
+          M5 效率工具落地
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-2-modules
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: 课程内容
+        title: |-
+          10+ 节实操课
+          五个模块推进
+        subtitle: |-
+          从安装配置到日常工具落地
+          每个模块都有作业模板与验收标准
+      - kind: rows
+        items: "{{content.moduleOverview}}"
+      - kind: footer
+        text: 五个模块，从装工具到跑通第一个智能体
+  - file: main-3-audience
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: 适合谁
+        title: 这门课为谁而设
+        subtitle: 不需要你会写代码，但需要你愿意动手
+      - kind: cards
+        columns: 2
+        items: "{{content.audience}}"
+      - kind: note
+        text: |-
+          交付形式：10+ 节实操课 + 作业模板
+          直播答疑 + 班级群交流。虚拟商品，报名后进班级群。
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-4-notice
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: 购买须知
+        title: 重要提醒
+        subtitle: |-
+          下单前请看这两条
+          先说清楚，再决定要不要买
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 虚拟商品
+            title: 退款按平台规则
+            lines:
+              - 线上课程为虚拟数字商品
+              - 退款规则按所在平台规则执行
+              - 可申请电子发票
+          - tag: 资料领取
+            title: 及时联系客服
+            lines:
+              - 购买后及时联系客服
+              - 领取学习指引和课程资料
+      - kind: note
+        text: |-
+          课程为 10+ 节实操课 + 作业模板，配套直播答疑，报名后进班级群。
+          咨询与售后：利姆斯科技 · 亿检链团队。
+      - kind: footer
+        text: 利姆斯科技 · 亿检链团队
+  - file: main-5-plain-light
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: plainLight
+    blocks:
+      - kind: title
+        spec:
+          enLabel: YIJIAN AGENT HANDS-ON CAMP
+          eyebrow: "{{vars.titleModifier}}"
+          title: "{{vars.titleLines}}"
+          subtitle: |-
+            从下载安装到跑通第一个智能体
+            装起来 · 用顺了 · 带得走
+          stats:
+            - value: 10+
+              label: 节实操课
+            - value: 5大
+              label: 实操模块
+            - value: 2个
+              label: 智能体模板
+          badges:
+            - 零基础可上手
+            - 直播答疑
+            - 全程录播
+      - kind: footer
+        text: "{{product.name}}"
+  - file: main-6-plain-deep
+    width: 1080
+    fit:
+      width: 1080
+      height: 1080
+    themeSlot: plainDeep
+    blocks:
+      - kind: title
+        spec:
+          enLabel: YIJIAN AGENT HANDS-ON CAMP
+          eyebrow: "{{vars.titleModifier}}"
+          title: "{{vars.titleLines}}"
+          subtitle: |-
+            从下载安装到跑通第一个智能体
+            装起来 · 用顺了 · 带得走
+          stats:
+            - value: 10+
+              label: 节实操课
+            - value: 5大
+              label: 实操模块
+            - value: 2个
+              label: 智能体模板
+          badges:
+            - 零基础可上手
+            - 直播答疑
+            - 全程录播
+      - kind: footer
+        text: "{{product.name}}"
+  - file: detail-1-modules
+    width: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: COURSE MODULES
+        title: 五个模块全景
+        subtitle: |-
+          10+ 节实操课拆成五个模块
+          每个模块都有配套作业模板
+      - kind: section
+        label: MODULE 01 — 05
+        title: 模块拆解
+        desc: 五个模块按顺序推进：前一个模块的产出，就是后一个模块的输入。
+      - kind: timeline
+        items:
+          - time: "{{content.modules.M1.label}}"
+            title: "{{content.modules.M1.title}}"
+            lines:
+              - 零基础装好智能体：下载、安装、环境自检
+              - 账号与权限配置，把参数调到自己能用的状态
+              - 跑通第一个可用的智能体，并留下可复现的步骤
+          - time: "{{content.modules.M2.label}}"
+            title: "{{content.modules.M2.title}}"
+            lines:
+              - 拆解提示词结构：目标、上下文、约束、输出格式
+              - 沉淀需求模板，把重复提问变成可复用资产
+              - 现场把一个真实需求写成模板并跑一遍
+          - time: "{{content.modules.M3.label}}"
+            title: "{{content.modules.M3.title}}"
+            lines:
+              - 体验反馈—调整—再验证机制的实际运行过程
+              - 看懂每次改动背后的原因与判定依据
+              - 把人工改一遍，变成按同一标准再迭代一轮
+          - time: "{{content.modules.M4.label}}"
+            title: "{{content.modules.M4.title}}"
+            lines:
+              - 从零搭出一条可复用的自动化流程
+              - 把工具按节点串接起来，配好每一步的参数
+              - 讲清每一步的操作方法与验收标准
+          - time: "{{content.modules.M5.label}}"
+            title: "{{content.modules.M5.title}}"
+            lines:
+              - 把智能体接进日常工具链：文档、表格、消息
+              - 沉淀可复用的操作方法与配置
+              - 把课堂里的方法带回真实工作里
+      - kind: note
+        text: |-
+          每个模块都有验收标准：跑得通、看得见、可以照着再做一遍。
+          课程交付的是方法与模板，不是现成答案。
+      - kind: footer
+        text: "{{product.name}}"
+  - file: detail-2-author-audience
+    width: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: ABOUT · FOR WHO
+        title: 谁来讲，讲给谁听
+        subtitle: |-
+          把踩过的坑讲成能照着做的步骤
+          只讲工具怎么用、流程怎么排，不做任何效果承诺
+      - kind: profile
+        profile:
+          avatar: "{{author.avatar}}"
+          name: "{{author.name}}"
+          role: "{{author.role}}"
+          bullets: "{{author.bullets}}"
+      - kind: note
+        text: 长期深耕需求文档与产品工程实践，完成亿检智能体在真实工作场景下的落地验证，主导文档协作与内容生产方向的工具实践。不讲行业大词，只讲你回去第一步该做什么。
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 他做过
+            title: 真实业务落地
+            lines:
+              - 把智能体装进企业流程
+              - 也装进内容生产流程
+          - tag: 他讲得
+            title: 能照做的步骤
+            lines:
+              - 不讲趋势，讲动作
+              - 每一步都有验收标准
+      - kind: section
+        label: 目标客户
+        title: 谁适合来，谁不必来
+        desc: 这门课解决的是「用了没用起来」的问题，不是「要不要用智能体」的问题。
+      - kind: cards
+        columns: 2
+        items: "{{content.targets}}"
+      - kind: note
+        text: 不必来：只想要资料包不愿实操的人；期待跳过实操直接看结果的人；完全不想动手配置环境的人。
+      - kind: rows
+        title: 常见问题
+        items: "{{content.faq}}"
+      - kind: note
+        text: LIMS 方法贯穿全课：L 检测 · I 决策 · M 执行 · S 追溯。每一条都对应到具体工具、具体方法与验收标准。
+      - kind: footer
+        text: "{{product.name}}"
+  - file: detail-3-author
+    width: 1080
+    themeSlot: main
+    blocks:
+      - kind: hero
+        kicker: INSTRUCTOR · 讲师
+        title: 谁来讲这门课
+        subtitle: |-
+          做过、踩过、写成步骤
+          不讲行业大词，只讲你回去第一步该做什么
+      - kind: profile
+        profile:
+          avatar: "{{author.avatar}}"
+          name: "{{author.name}}"
+          role: "{{author.role}}"
+          bullets: "{{author.bullets}}"
+      - kind: note
+        text: 长期深耕需求文档与产品工程实践，完成亿检智能体在真实工作场景下的落地验证，主导文档协作与内容生产方向的工具实践。
+      - kind: cards
+        columns: 2
+        items:
+          - tag: 他做过
+            title: 真实业务落地
+            lines:
+              - 把智能体装进企业流程
+              - 也装进内容生产流程
+          - tag: 他讲得
+            title: 能照做的步骤
+            lines:
+              - 不讲趋势，讲动作
+              - 每一步都有验收标准
+      - kind: footer
+        text: "{{product.name}}"
+copy:
+  fileName: 商品文案.md
+  blocks:
+    - type: heading
+      level: 1
+      text: "{{product.name}}"
+
+    - type: fields
+      fields:
+        - label: 商品名称
+          value: "{{product.name}}"
+        - label: 商品属性
+          value: "{{product.category}}"
+        - label: 售价
+          value: "以商品后台设置为准（图与文案均不写死价格）"
+        - label: 品牌
+          value: "{{product.brand}}"
+        - label: 交付形式
+          value: "{{product.delivery}}"
+        - label: 赠品
+          value: "{{product.gifts}}"
+        - label: 课程定位
+          value: "{{product.position}}"
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程性质说明
+    - type: raw
+      text: |-
+        这是一堂 **零基础智能体实操课**，属于**{{vars.titleModifier}}**方向的技术实操课程。10+ 节实操课，配套直播答疑。
+
+        课程内容覆盖：智能体安装配置与调试、提示词与需求模板、持续优化机制体验、工具串接与流程编排、效率工具落地。
+
+        课程**只讲授工具操作、技术配置与流程编排方法**，内容全部围绕工具安装、参数调试、提示词结构、流程编排与验收标准展开。课程提供方法、工具和可参照的实操步骤，实际掌握程度取决于学习者个人动手练习。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 一句话说明
+    - type: raw
+      text: |-
+        10+ 节实操课 + 作业模板 + 直播答疑：从装好第一个智能体，到把方法带回自己每天在用的工具里。
+
+        不堆砌抽象概念，聚焦零基础能照着做的实操步骤。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程简介
+    - type: raw
+      text: |-
+        这不是一堂侧重理论概念的课，也不要求你有技术背景。
+
+        10+ 节实操课，带着你把「亿检智能体」从下载安装一路跑通：先装好、配好参数、写好提示词，再把工具按节点串接成一条自己用得上的流程，最后迁移到常用的工作工具里。
+
+        学习完成后，你收获的不是单一软件，而是一套**可复用的工具配置方案、流程编排方法，以及个人技能沉淀清单**。
+
+        课程主线遵循{{brand.text}}的 LIMS 方法框架：**L 检测 · I 决策 · M 执行 · S 追溯**，配套智能体辅助下的反馈调整迭代循环。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 实操课安排
+    - type: raw
+      text: |-
+        10+ 节实操课按五个模块顺序推进，每个模块围绕一个可验收的动作展开，配套作业模板与验收清单。
+
+    - type: moduleOverview
+    - type: raw
+      text: |-
+        直播答疑集中解答实操中遇到的问题，作业模板在班级群领取。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 课程内容（五个模块）
+    - type: modules
+    - type: hr
+    - type: heading
+      level: 2
+      text: 上课流程
+    - type: raw
+      text: |-
+        **课前**　下单成功 → 收到【{{brand.text}}】开头的短信 → 按说明进入班级群，完成学习环境自检
+
+        **课中**　实操课按模块顺序推进，每节课都有配套作业模板；直播答疑拆解真实工作场景下的工具实操问题
+
+        **课后**　作业模板包 + 班级群交流 + 工具新功能演示
+
+        > 所有报名学员均可参加直播答疑（工具实操常见问题集中解答 + 新功能演示）。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 目标客户
+    - type: targetTable
+    - type: raw
+      text: |-
+        **不适合**：仅希望获取资料包、不愿动手实操练习的人；期待跳过实操练习、直接看结果的人；拒绝进行软件环境配置的学习者。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 作者介绍
+    - type: author
+    - type: raw
+      text: |-
+        长期深耕需求文档与产品工程实践，完成亿检智能体在真实工作场景下的落地验证，主导文档协作、内容生产方向的工具实践。
+
+        本课程由他主讲。少用空泛行业概念，聚焦实操落地步骤，分享项目实践中积累的经验与避坑方案。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 你会带走什么
+    - type: ordered
+      items:
+        - "完成部署、可实操运行的亿检智能体实例"
+        - "1 个班级交流群，配套工具包，2 套智能体模板"
+        - "一套可复用的工具配置方案与流程编排方法"
+        - "一份可自主执行的技能实践行动清单"
+    - type: hr
+    - type: heading
+      level: 2
+      text: 常见问题
+    - type: faq
+    - type: hr
+    - type: heading
+      level: 2
+      text: 重要提醒
+    - type: raw
+      text: |-
+        线上课程属于虚拟数字商品，退款规则按所在平台规则执行，可申请电子发票。
+
+        购买课程服务后，请及时联系客服，获取学习指引与课程资料。
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 服务与售后
+    - type: list
+      items:
+        - 退款按所在平台规则执行
+        - 课程咨询与售后由{{product.brand}}提供
+    - type: hr
+    - type: heading
+      level: 2
+      text: 品牌背景
+    - type: raw
+      text: |-
+        **{{brand.text}} = 亿 + 检 + 链**　亿代表规模，检代表观测和验证，链代表连接和追溯。
+
+        依托智能体与数据能力，让关键环节**可检测、可决策、可执行、可追溯**，支撑团队以数据为依据完成协作。
+
+        在检测行业，{{brand.text}} LIMS 已落地多家实验室场景，打通检测记录、报告交付与数据追溯的核验链路，服务军工、政府与企业团队。
+
+        **{{product.brand}}**
+
+    - type: hr
+    - type: heading
+      level: 2
+      text: 配图清单
+    - type: table
+      header:
+        - 文件
+        - 尺寸
+        - 用途
+      rows:
+        - ["`main-0-title.png`", "1080×1080", "课程标题封面（大字报）"]
+        - ["`main-1-hero.png`", "1080×1080", "商品首图（主视觉）"]
+        - ["`main-2-modules.png`", "1080×1080", "课程安排（五个模块 + 10+ 节实操课）"]
+        - ["`main-3-audience.png`", "1080×1080", "适合谁 + 交付形式"]
+        - ["`main-4-notice.png`", "1080×1080", "重要提醒（虚拟商品说明）"]
+        - ["`main-5-plain-light.png`", "1080×1080", "纯色底图（浅底）——礼物/推荐场景"]
+        - ["`main-6-plain-deep.png`", "1080×1080", "纯色底图（深底）——礼物/推荐场景"]
+        - ["`detail-1-modules.png`", "1080×长图", "核心内容：五个实操模块详解"]
+        - ["`detail-2-author-audience.png`", "1080×长图", "核心内容：作者介绍 + 目标客户 + 常见问题"]
+        - ["`detail-3-author.png`", "1080×长图", "讲师专页：头像名片 + 资历 + 授课方式"]
+    - type: hr
+    - type: raw
+      text: "<!-- ↓↓↓ 以下为内部运营备注，复制到商品详情页时不要带上 ↓↓↓ -->"
+    - type: heading
+      level: 2
+      text: 运营备注（不对外展示）
+    - type: raw
+      text: |-
+        1. **本轮 r7 改了什么（2026-10-21）**：**删掉全部「3 天连播」表述**——课程从来没有 3 天连播，只有 10+ 节实操课 + 直播答疑。原来的「3 天连播 / 3 天 / D1-D2-D3 三天安排 / 每天一个主题连播」属于**事实性错误陈述**（与实际交付不符，重则被判虚假宣传），因此不是在原句上改词，而是把整条交付口径重写：商品字段（交付形式 / 课程定位）、4 张封面（数值卡 / 徽章 / 副标题）、方图 1-4、长图 1-2、详情页（课程性质说明 / 一句话说明 / 课程简介 / 安排节 / 上课流程 / FAQ）逐句重写。r6 出图产物已归档到 `outputs/_archive/shop-listing-v8-r6-20261021/`。
+        2. **新的交付口径（以后只写这个）**：**10+ 节实操课 + 作业模板 + 直播答疑 + 班级群交流**。方图 2 从「三天安排（D1/D2/D3）」改成「**课程安排（五个模块）**」，行数据从 `DAY_PLAN` 换成从 `MODULE_CARDS` 派生的 `MODULE_OVERVIEW`（图文同源）；详情页原「3 天安排」一节改成「**实操课安排**」。
+        3. **检查器新增硬断言**：对外内容（商品字段 + 海报 + 对外文案）中「连播」「三天」「3 天」**出现 0 次**，命中即 `exit 1`；交付形式必须含「实操课」与「直播答疑」，对外文案必须出现「直播答疑」与「10+」。以后想改回连播口径，会被直接拦下。
+        4. **为什么商品名不带「3天」**：现在连「3 天」这个交付节奏本身都不存在了，更谈不上写进商品名。**不许写「3天速成 / 3天见效 / 3天学会 / 立刻上手」**，承诺类表述由检查器 `PROMISE_V8` 词库硬拦截（包学会 / 包落地 / 包见效 / 速成 / 保证 / 必然见效…），命中即 `exit 1`。
+        5. **为什么去英文「AI」**：商品名与海报里不再出现 AI 缩写，机审看到的是「{{product.name}}」+「{{vars.titleModifier}}」这两个纯技术信号。**中文「{{vars.titleModifier}}」保留**——它是类目方向词，也是机审识别「技术培训」类目的关键信号，删了等于自断类目归属。检查器新增 `/AI/` 断言（按词边界匹配，不会误伤 TRAINING / DETAIL 这类英文单词），命中即 `exit 1`。
+        6. **类目信号不能丢**：商品名去掉「{{vars.titleModifier}}」后，海报主标题上方仍然保留这个类目标签，详情页也写着「{{vars.titleModifier}}方向的技术实操课程」——机器审核看的是「商品名 + 首图 + 详情页」三处，缺一处就少一个信号。检查器会断言：4 张封面上方槽位 = 修饰词，对外文案同时出现主标题与修饰词。
+        7. **r3 的变更记录（仍然有效）**：标题主语从「{{brand.text}}AI原生组织实训营」换成「亿检智能体」——课程主体是**工具**，不是「组织变革」。上一版「AI 原生组织」读起来像一个自动运转的企业级方案，平台机审可能往「企业改造」那一侧归；换成「工具 + 小白 + 实操」之后，语义落在「工具操作 / 安装配置 / 提示词」这类官方允许的纯技术方向上。
+        8. **删掉的「流程搭建示例」**：原 `CASE_STEPS`（检测报告交付流程 · 五步）、长图 detail-1 的 `CASE · 检测报告交付流程` 段、详情页的「流程搭建示例：检测报告交付流程」整节，全部移除。连带把 M4 从「业务流程搭建」改成「**工具串接与流程编排**」——示例删掉后原名里的「业务」二字没有落点了，改成工具口径后原有内容（节点配置 / 编排逻辑 / 验收标准）原样保留。
+        9. **「流程」与「工作流」**：**「流程」「流程编排」可以出现，「工作流」必须 0 次**（「工作流程」含「工作流」子串，也会被检查器命中）。检查器已加断言防止改回来。
+        10. **受众口径（延续 V8 上一版的整改，不回退）**：不写「创业者 / 实体老板 / 自媒体」，不写「一个人干一支团队的活」这类省钱增效暗示。本版新增的只有「零基础 / 没接触过也能跟上 / 从下载安装讲起」这种**技术学习口径**，安全。
+        11. **品牌背景里的商业成绩数字**：继续不写（V7 的 300+ 家 / 72%↓ / 92% 全部删除）。「已落地多家实验室场景」是定性描述，保留。
+        12. **平台合规口径**：教育培训类目禁止教授使用 AI 开展商业活动或营利的课程；允许纯技术类（工具操作、技术原理、提示词、代码开发、模型搭建）。但**允许清单不等于机审会放行**——机审是语义分类，凡是读起来像「企业自动生钱」的表达都会被归到营利课程。**具体条款编号与判定口径以两个平台后台最新规则为准，上架前需人工核对一次。**
+        13. **类目建议**：优先选技术类目（人工智能 / 软件技术 / IT 技能 / IT 互联网技术培训），**不要**选副业、创业、营销、电商等盈利导向类目。商品属性填「虚拟商品 · 数字课程（智能体工具技术实战）」。
+        14. **上架前必检**：官方禁用词库已内置在 `scripts/check-listing-compliance.ts`（含直接禁用词、间接话术、关联高危词、平台高危词、英文高危词五类，另加 V8 专属的平台绑定、经营口径、承诺类断言），一条命令跑完全量扫描，出现即删：
+            `bun run scripts/check-listing-compliance.ts v8`
+        15. **不要自行加价宣传**：图中与文案均不写死售价，价格在商品后台设置；也不要把「效果承诺」「回本」「多久见效」写进详情页。品牌背景里的商业成绩数字同样要删——**数字型商业成绩也会被读成效果承诺**。
+        16. **域名**：官网地址已从图中移除，需要时再补。
+        17. **图片**：封面大字报用 `main-0-title.png`，主图第 1 张用 `main-1-hero.png`；详情页建议按「主视觉 → 课程安排 → 适合谁 → 重要提醒 → 模块详解 → 作者与 FAQ」顺序铺排；需要单独介绍讲师时用 `detail-3-author.png`（讲师专页，与长图里的头像名片同源）。
+        18. **纯色底图（重要）**：视频号小店在「送礼/推荐」等场景要用纯色底图，平台自带的 AI 编辑工具会把深底海报抠成“主体+白底”，白字直接消失、字变虚影，**不可用**。已改用本地重排的两张：
+            - `main-5-plain-light.png`：浅底平涂（清新绿方案下为纯白底，文字全部深色系）
+            - `main-6-plain-deep.png`：深底平涂（清新绿方案下为纯绿底，保留品牌色，主体对比更硬）
+            两张都是 1080×1080、无渐变无纹理无暗角的平涂底，元素与 `main-0-title.png` 完全一致，可直接上传。
+        19. **配色方案**：三套方案已参数化（暖色琥珀 / 经典商务蓝 / 清新绿），生成时用 `--theme` 选择，默认清新绿：
+            `bun run scripts/gen-shop-listing.ts v8 --theme fresh`
+            换方案时，`main-5-plain-light` / `main-6-plain-deep` 会自动换成对应方案的浅底 / 深底纯色图；加 `--out` 可换输出目录，避免覆盖当前交付：
+            `bun run scripts/gen-shop-listing.ts v8 --theme blue --out ./outputs/shop-listing-v8-blue`
+        20. **品牌位**：右上角统一「Logo + {{brand.text}}」（白色圆角 chip 承托），只有 `main-4-notice.png` 保留「利姆斯科技 · {{brand.text}}团队」全称。
+        21. **作者**：署名已确认为「{{author.name}} · {{author.role}}」，头像使用 `assets/shop-listing/author-avatar.png`；换人需同步替换长图与详情文案。
+        22. **录播与直播答疑的口径（合规文档 §三）**：详情页文案合规 ≠ 内容合规。实操课录播与直播答疑的口播必须统一为「工具实操教学、技术方法、流程编排」口径，不出现商业收益、平台运营、账号增长类表达；也不要说「几天就能见效」这类承诺。
+
+        <!-- ↑↑↑ 内部运营备注结束 ↑↑↑（以上到本行为内部内容，粘贴到商品详情页前请整段删除） -->
